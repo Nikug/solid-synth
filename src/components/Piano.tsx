@@ -16,9 +16,7 @@ export const Piano: Component = () => {
     <div>
       <div class="flex mb-8">
         <For each={getOctave()}>
-          {(note) => (
-            <PianoKey note={note[0]} frequency={note[1]} isBlack={note[0].includes("#")} />
-          )}
+          {(note) => <PianoKey note={note[0]} frequency={note[1]} isBlack={note[0].length > 1} />}
         </For>
       </div>
       <div class="flex gap-2 items-center">
