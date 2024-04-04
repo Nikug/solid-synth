@@ -20,12 +20,12 @@ export const Piano: Component = () => {
         </For>
       </div>
       <div class="flex gap-2 items-center">
-        <button class="w-8 h-8 border rounded" onclick={() => handleOctaveChange(1)}>
-          +
-        </button>
-        <p>{octave()}</p>
         <button class="w-8 h-8 border rounded" onclick={() => handleOctaveChange(-1)}>
           -
+        </button>
+        <p>{octave()}</p>
+        <button class="w-8 h-8 border rounded" onclick={() => handleOctaveChange(1)}>
+          +
         </button>
       </div>
     </div>

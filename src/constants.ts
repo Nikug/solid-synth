@@ -134,3 +134,18 @@ export const NoteFrequencies: NoteFrequencyTable = {
     B: 7902.133,
   },
 }
+
+export const Keymap: Record<string, Note> = {
+  KeyS: "C",
+  KeyE: "C#",
+  KeyD: "D",
+  KeyR: "D#",
+  KeyF: "E",
+  KeyG: "F",
+  KeyY: "F#",
+  KeyH: "G",
+  KeyU: "G#",
+  KeyJ: "A",
+  KeyI: "A#",
+  KeyK: "B",
+}
