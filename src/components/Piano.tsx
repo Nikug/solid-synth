@@ -15,12 +15,20 @@ export const Piano: Component = () => {
   return (
     <div>
       <div class="flex mb-8">
-        <For each={getOctave()}>{(note) => <PianoKey note={note[0]} frequency={note[1]} />}</For>
+        <For each={getOctave()}>
+          {(note) => (
+            <PianoKey note={note[0]} frequency={note[1]} isBlack={note[0].includes("#")} />
+          )}
+        </For>
       </div>
-      <div class="flex gap-2">
-        <button onclick={() => handleOctaveChange(1)}>+</button>
+      <div class="flex gap-2 items-center">
+        <button class="w-8 h-8 border rounded" onclick={() => handleOctaveChange(1)}>
+          +
+        </button>
         <p>{octave()}</p>
-        <button onclick={() => handleOctaveChange(-1)}>-</button>
+        <button class="w-8 h-8 border rounded" onclick={() => handleOctaveChange(-1)}>
+          -
+        </button>
       </div>
     </div>
   )
