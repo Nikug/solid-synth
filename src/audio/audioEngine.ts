@@ -3,7 +3,7 @@ const audioGain = audioContext.createGain()
 audioGain.gain.value = 0.5
 audioGain.connect(audioContext.destination)
 
-const oscillators: Record<number, OscillatorNode> = {}
+const oscillators: Map<number, OscillatorNode> = new Map()
 
 export const playNote = (frequency: number) => {
   if (oscillators[frequency]) return
@@ -13,22 +13,22 @@ export const playNote = (frequency: number) => {
   oscillator.type = "sine"
   oscillator.frequency.value = frequency
   oscillator.start()
-  oscillators[frequency] = oscillator
+  oscillators.set(frequency, oscillator)
 }
 
 export const stopNote = (frequency: number) => {
-  const oscillator = oscillators[frequency]
+  const oscillator = oscillators.get(frequency)
   if (oscillator) {
     oscillator.stop()
-    oscillators[frequency] = undefined
+    oscillators.delete(frequency)
   }
 }
 
 export const stopAllNotes = () => {
-  Object.values(oscillators).forEach((oscillator) => {
+  oscillators.forEach((oscillator) => {
     if (oscillator) {
       oscillator.stop()
-      oscillators[oscillator.frequency.value] = undefined
+      oscillators.delete(oscillator.frequency.value)
     }
   })
 }

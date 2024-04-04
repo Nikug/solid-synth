@@ -8,7 +8,6 @@ export const Piano: Component = () => {
 
   const handleOctaveChange = (increment: number) => {
     const newOctave = noteBuffer.octave + increment
-    if (newOctave < 0 || newOctave > 8) return
     setOctave(newOctave)
   }
 
