@@ -1,10 +1,11 @@
 import clsx from "clsx"
 import { Component } from "solid-js"
 import { addNote, createNoteName, noteBuffer, removeNote } from "../audio/noteStore"
+import { Note, Octave } from "../constants"
 
 interface Props {
-  note: string
-  frequency: number
+  note: Note
+  octave: Octave
   isBlack: boolean
 }
 
@@ -12,17 +13,17 @@ export const PianoKey: Component<Props> = (props) => {
   const handleClickStart = (event: MouseEvent) => {
     event.preventDefault()
     if (event.buttons === 0) return
-    addNote(props.note)
+    addNote(props.note, props.octave)
   }
 
   const handleClickEnd = (event: MouseEvent) => {
     event.preventDefault()
-    removeNote(props.note)
+    removeNote(props.note, props.octave)
   }
 
   const isKeyPressed = () => {
     const activeNotes = noteBuffer.activeNotes
-    const noteName = createNoteName(noteBuffer.octave, props.note)
+    const noteName = createNoteName(props.octave, props.note)
     return activeNotes.has(noteName)
   }
 

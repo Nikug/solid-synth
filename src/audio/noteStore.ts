@@ -3,7 +3,7 @@ import { playNote, stopAllNotes, stopNote } from "./audioEngine"
 import { Note, NoteFrequencies, Octave } from "../constants"
 
 interface Notes {
-  octave: number
+  octave: Octave
   activeNotes: Map<string, ActiveNote>
 }
 
@@ -13,7 +13,7 @@ interface ActiveNote {
   frequency: number
 }
 
-const newStore = () => {
+const newStore = (): Notes => {
   return {
     octave: 4,
     activeNotes: new Map<string, ActiveNote>(),
@@ -26,10 +26,11 @@ export const noteBuffer = notes
 
 export const createNoteName = (octave: number, note: string) => `${note}${octave}`
 
-export const setOctave = (octave: number) => {
-  if (octave < 1 || octave > 8) return
+export const setOctave = (octave: Octave) => {
+  if (octave < 1 || octave > 7) return
 
-  setNotes("octave", octave)
+  const difference = octave - notes.octave
+  setNotes("octave", octave as Octave)
 
   // Stop all notes, transpose them to new octave and play again
   stopAllNotes()
@@ -37,11 +38,11 @@ export const setOctave = (octave: number) => {
     const newActiveNotes = new Map<string, ActiveNote>()
     activeNotes.forEach((value) => {
       const newNote = {
-        octave: octave as Octave,
+        octave: (value.octave + difference) as Octave,
         note: value.note,
-        frequency: NoteFrequencies[octave][value.note],
+        frequency: NoteFrequencies[value.octave + difference][value.note],
       }
-      newActiveNotes.set(createNoteName(octave, value.note), newNote)
+      newActiveNotes.set(createNoteName(newNote.octave, newNote.note), newNote)
     })
     return newActiveNotes
   })
@@ -51,12 +52,12 @@ export const setOctave = (octave: number) => {
   })
 }
 
-export const addNote = (note: string) => {
-  const key = createNoteName(notes.octave, note)
+export const addNote = (note: Note, octave: Octave) => {
+  const key = createNoteName(octave, note)
   const activeNote = {
-    note: note as Note,
-    octave: notes.octave as Octave,
-    frequency: NoteFrequencies[notes.octave][note],
+    note: note,
+    octave: octave,
+    frequency: NoteFrequencies[octave][note],
   }
 
   setNotes("activeNotes", (activeNotes) => {
@@ -67,8 +68,8 @@ export const addNote = (note: string) => {
   playNote(activeNote.frequency)
 }
 
-export const removeNote = (note: string) => {
-  const key = createNoteName(notes.octave, note)
+export const removeNote = (note: Note, octave: Octave) => {
+  const key = createNoteName(octave, note)
   let activeNote = notes.activeNotes.get(key)
   if (!activeNote) return
 

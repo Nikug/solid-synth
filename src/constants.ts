@@ -148,4 +148,5 @@ export const Keymap: Record<string, Note> = {
   KeyJ: "A",
   KeyI: "A#",
   KeyK: "B",
+  KeyL: "C",
 }

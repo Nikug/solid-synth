@@ -1,13 +1,18 @@
 import { Component, For } from "solid-js"
-import { NoteFrequencies } from "../constants"
+import { Note, NoteFrequencies, Octave } from "../constants"
 import { PianoKey } from "./PianoKey"
 import { noteBuffer, setOctave } from "../audio/noteStore"
 
 export const Piano: Component = () => {
-  const getOctave = (): [string, number][] => Object.entries(NoteFrequencies[noteBuffer.octave])
+  const getOctave = (): [Note, Octave][] => {
+    const keys = Object.keys(NoteFrequencies[noteBuffer.octave]) as Note[]
+    const entries: [Note, Octave][] = keys.map((key) => [key, noteBuffer.octave])
+    entries.push(["C", (noteBuffer.octave + 1) as Octave])
+    return entries
+  }
 
   const handleOctaveChange = (increment: number) => {
-    const newOctave = noteBuffer.octave + increment
+    const newOctave = (noteBuffer.octave + increment) as Octave
     setOctave(newOctave)
   }
 
@@ -15,7 +20,7 @@ export const Piano: Component = () => {
     <div>
       <div class="flex mb-8">
         <For each={getOctave()}>
-          {(note) => <PianoKey note={note[0]} frequency={note[1]} isBlack={note[0].length > 1} />}
+          {(note) => <PianoKey note={note[0]} octave={note[1]} isBlack={note[0].length > 1} />}
         </For>
       </div>
       <div class="flex gap-2 items-center">

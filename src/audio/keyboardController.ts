@@ -1,4 +1,4 @@
-import { Keymap } from "../constants"
+import { Keymap, Octave } from "../constants"
 import { addNote, noteBuffer, removeNote, setOctave } from "./noteStore"
 
 export const initializeKeyboard = () => {
@@ -16,25 +16,33 @@ export const teardownKeyboard = () => {
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.repeat) return
   if (Keymap[event.code]) {
+    let octave = noteBuffer.octave
+    if (event.code === "KeyL") {
+      octave += 1
+    }
     event.preventDefault()
-    addNote(Keymap[event.code])
+    addNote(Keymap[event.code], octave)
   }
 }
 
 const handleKeyUp = (event: KeyboardEvent) => {
   if (event.repeat) return
   if (Keymap[event.code]) {
+    let octave = noteBuffer.octave
+    if (event.code === "KeyL") {
+      octave += 1
+    }
     event.preventDefault()
-    removeNote(Keymap[event.code])
+    removeNote(Keymap[event.code], octave)
   }
 }
 
 const handleOctaveKey = (event: KeyboardEvent) => {
   if (event.code === "ArrowUp") {
     event.preventDefault()
-    setOctave(noteBuffer.octave + 1)
+    setOctave((noteBuffer.octave + 1) as Octave)
   } else if (event.code === "ArrowDown") {
     event.preventDefault()
-    setOctave(noteBuffer.octave - 1)
+    setOctave((noteBuffer.octave - 1) as Octave)
   }
 }
