@@ -5,6 +5,7 @@ import { Note, Octave } from "../constants"
 
 interface Props {
   note: Note
+  key: string
   octave: Octave
   isBlack: boolean
 }
@@ -39,14 +40,15 @@ export const PianoKey: Component<Props> = (props) => {
     <div
       class={clsx(
         getClasses(),
-        "border-2 rounded h-32 w-16 flex justify-center items-start select-none shadow-lg",
+        "border-2 rounded h-32 w-16 py-1 flex flex-col justify-between items-center select-none shadow-lg",
       )}
       onMouseDown={handleClickStart}
       onMouseOver={handleClickStart}
       onMouseUp={handleClickEnd}
       onMouseLeave={handleClickEnd}
     >
-      {props.note}
+      <p>{props.note}</p>
+      <p class="opacity-50">{props.key}</p>
     </div>
   )
 }

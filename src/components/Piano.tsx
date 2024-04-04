@@ -1,14 +1,23 @@
 import { Component, For } from "solid-js"
-import { Note, NoteFrequencies, Octave } from "../constants"
+import { Keymap, Note, Octave } from "../constants"
 import { PianoKey } from "./PianoKey"
 import { noteBuffer, setOctave } from "../audio/noteStore"
 import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 
+interface Key {
+  note: Note
+  octave: Octave
+  key: string
+}
+
 export const Piano: Component = () => {
-  const getOctave = (): [Note, Octave][] => {
-    const keys = Object.keys(NoteFrequencies[noteBuffer.octave]) as Note[]
-    const entries: [Note, Octave][] = keys.map((key) => [key, noteBuffer.octave])
-    entries.push(["C", (noteBuffer.octave + 1) as Octave])
+  const getOctave = (): Key[] => {
+    const keys = Object.entries(Keymap)
+    const entries: Key[] = keys.map(([key, note], i) => ({
+      note: note as Note,
+      octave: (noteBuffer.octave + Math.floor(i / 12)) as Octave,
+      key: key[3].toLowerCase(),
+    }))
     return entries
   }
 
@@ -36,7 +45,14 @@ export const Piano: Component = () => {
       </div>
       <div class="flex">
         <For each={getOctave()}>
-          {(note) => <PianoKey note={note[0]} octave={note[1]} isBlack={note[0].length > 1} />}
+          {(key) => (
+            <PianoKey
+              note={key.note}
+              key={key.key}
+              octave={key.octave}
+              isBlack={key.note.length > 1}
+            />
+          )}
         </For>
       </div>
     </div>
