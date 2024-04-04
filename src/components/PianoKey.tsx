@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { Component } from "solid-js"
-import { playNote, stopNote } from "../audio/AudioEngine"
+import { playNote, stopNote } from "../audio/audioEngine"
 
 interface Props {
   note: string
