@@ -24,7 +24,7 @@ export const PianoKey: Component<Props> = (props) => {
     <div
       class={clsx(
         props.isBlack ? "bg-black text-white" : "bg-white text-black",
-        "border rounded h-32 w-16 flex justify-center items-start select-none",
+        "border rounded h-32 w-16 flex justify-center items-start select-none shadow-lg",
       )}
       onMouseDown={handleClickStart}
       onMouseOver={handleClickStart}

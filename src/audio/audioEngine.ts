@@ -6,6 +6,8 @@ audioGain.connect(audioContext.destination)
 const oscillators: Record<number, OscillatorNode> = {}
 
 export const playNote = (frequency: number) => {
+  if (oscillators[frequency]) return
+
   const oscillator = audioContext.createOscillator()
   oscillator.connect(audioGain)
   oscillator.type = "sine"
