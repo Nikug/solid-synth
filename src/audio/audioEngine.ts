@@ -23,3 +23,12 @@ export const stopNote = (frequency: number) => {
     oscillators[frequency] = undefined
   }
 }
+
+export const stopAllNotes = () => {
+  Object.values(oscillators).forEach((oscillator) => {
+    if (oscillator) {
+      oscillator.stop()
+      oscillators[oscillator.frequency.value] = undefined
+    }
+  })
+}

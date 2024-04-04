@@ -1,13 +1,13 @@
-import { Component, For, createSignal } from "solid-js"
+import { Component, For } from "solid-js"
 import { NoteFrequencies } from "../constants"
 import { PianoKey } from "./PianoKey"
+import { noteBuffer, setOctave } from "../audio/noteStore"
 
 export const Piano: Component = () => {
-  const [octave, setOctave] = createSignal(4)
-  const getOctave = (): [string, number][] => Object.entries(NoteFrequencies[octave()])
+  const getOctave = (): [string, number][] => Object.entries(NoteFrequencies[noteBuffer.octave])
 
   const handleOctaveChange = (increment: number) => {
-    const newOctave = octave() + increment
+    const newOctave = noteBuffer.octave + increment
     if (newOctave < 0 || newOctave > 8) return
     setOctave(newOctave)
   }
@@ -23,7 +23,7 @@ export const Piano: Component = () => {
         <button class="w-8 h-8 border rounded bg-white" onclick={() => handleOctaveChange(-1)}>
           -
         </button>
-        <p>{octave()}</p>
+        <p>{noteBuffer.octave}</p>
         <button class="w-8 h-8 border rounded bg-white" onclick={() => handleOctaveChange(1)}>
           +
         </button>

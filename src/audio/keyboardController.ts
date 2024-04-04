@@ -1,5 +1,5 @@
-import { Keymap, NoteFrequencies } from "../constants"
-import { playNote, stopNote } from "./audioEngine"
+import { Keymap } from "../constants"
+import { addNote, removeNote } from "./noteStore"
 
 export const initializeKeyboard = () => {
   addEventListener("keydown", handleKeyDown)
@@ -15,7 +15,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   if (event.repeat) return
   if (Keymap[event.code]) {
     event.preventDefault()
-    playNote(NoteFrequencies[4][Keymap[event.code]])
+    addNote(Keymap[event.code])
   }
 }
 
@@ -23,6 +23,6 @@ const handleKeyUp = (event: KeyboardEvent) => {
   if (event.repeat) return
   if (Keymap[event.code]) {
     event.preventDefault()
-    stopNote(NoteFrequencies[4][Keymap[event.code]])
+    removeNote(Keymap[event.code])
   }
 }
