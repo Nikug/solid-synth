@@ -27,7 +27,7 @@ export const Piano: Component = () => {
   }
 
   return (
-    <div class="flex gap-4">
+    <div class="flex gap-4 p-8 border-2 rounded-xl shadow-xl bg-gray-100">
       <div class="flex flex-col gap-2 justify-center items-center">
         <button
           class="w-8 h-8 border rounded bg-white flex items-center justify-center"
