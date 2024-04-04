@@ -30,9 +30,9 @@ export const PianoKey: Component<Props> = (props) => {
 
   const getClasses = () => {
     if (isKeyPressed()) {
-      return clsx("shadow-2xl", props.isBlack ? "text-white bg-blue-950" : "text-black bg-blue-100")
+      return clsx("shadow", props.isBlack ? "text-white bg-blue-950" : "text-black bg-blue-100")
     } else {
-      return props.isBlack ? "text-white bg-black" : "text-black bg-white"
+      return clsx("shadow-xl", props.isBlack ? "text-white bg-black" : "text-black bg-white")
     }
   }
 
@@ -40,7 +40,7 @@ export const PianoKey: Component<Props> = (props) => {
     <div
       class={clsx(
         getClasses(),
-        "border-2 rounded h-32 w-16 py-1 flex flex-col justify-between items-center select-none shadow-lg",
+        "border-2 rounded h-32 w-16 py-1 flex flex-col justify-between items-center select-none transition-all duration-100",
       )}
       onMouseDown={handleClickStart}
       onMouseOver={handleClickStart}
