@@ -39,7 +39,7 @@ export const PianoKey: Component<Props> = (props) => {
     <div
       class={clsx(
         getClasses(),
-        "border rounded h-32 w-16 flex justify-center items-start select-none shadow-lg",
+        "border-2 rounded h-32 w-16 flex justify-center items-start select-none shadow-lg",
       )}
       onMouseDown={handleClickStart}
       onMouseOver={handleClickStart}
