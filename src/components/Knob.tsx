@@ -55,7 +55,7 @@ export const Knob: Component<Props> = (props) => {
   }
 
   return (
-    <div class="flex flex-col items-center w-12">
+    <div class="flex flex-col items-center w-14">
       <div class="relative">
         <div
           class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center cursor-pointer relative"

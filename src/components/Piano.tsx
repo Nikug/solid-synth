@@ -5,6 +5,7 @@ import { noteBuffer, setOctave } from "../audio/noteStore"
 import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 import { Knob } from "./Knob"
 import { settings, setSettings } from "../audio/settingsStore"
+import { AdsrSection } from "./AdsrSection"
 
 interface Key {
   note: Note
@@ -30,7 +31,7 @@ export const Piano: Component = () => {
 
   return (
     <div class="p-8 border-2 rounded-xl shadow-xl bg-gray-100">
-      <div class="w-full flex justify-start mb-4">
+      <div class="w-full flex justify-start items-center gap-4 mb-4">
         <Knob
           value={settings.volume}
           min={0}
@@ -38,6 +39,7 @@ export const Piano: Component = () => {
           onChange={(value) => setSettings("volume", value)}
           label="Volume"
         />
+        <AdsrSection />
       </div>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">
