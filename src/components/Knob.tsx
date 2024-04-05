@@ -10,6 +10,7 @@ interface Props {
   max: number
   label: string
   onChange: (value: number) => void
+  unit?: string
 }
 
 export const Knob: Component<Props> = (props) => {
@@ -78,7 +79,10 @@ export const Knob: Component<Props> = (props) => {
         when={dragStart() !== null}
         fallback={<p class="text-sm text-gray-600">{props.label}</p>}
       >
-        <p class="text-sm text-gray-600">{props.value.toFixed(2)}</p>
+        <p class="text-sm text-gray-600">
+          {props.value.toFixed(2)}
+          {props.unit}
+        </p>
       </Show>
     </div>
   )

@@ -12,7 +12,7 @@ const App: Component = () => {
   })
 
   return (
-    <div class="w-screen h-screen bg-red-100">
+    <div class="w-screen h-screen bg-red-100 text-gray-700">
       <div class="max-w-5xl mx-auto h-screen flex justify-center items-center">
         <Piano />
       </div>

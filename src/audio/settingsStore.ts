@@ -9,7 +9,7 @@ export interface Settings {
   volumeAdsr: Adsr
 }
 
-interface Adsr {
+export interface Adsr {
   attack: number
   hold: number
   decay: number
@@ -20,11 +20,11 @@ interface Adsr {
 const newSettings = (): Settings => ({
   volume: 0.5,
   volumeAdsr: {
-    attack: 0.01,
-    hold: 0.0,
-    decay: 0.5,
-    sustain: 0.5,
-    release: 0.5,
+    attack: 10,
+    hold: 50,
+    decay: 500,
+    sustain: 0.2,
+    release: 300,
   },
 })
 
