@@ -1,8 +1,8 @@
-export const toPercentage = (value: number, min: number, max: number) => {
+export const normalize = (value: number, min: number, max: number) => {
   return (value - min) / (max - min)
 }
 
-export const fromPercentage = (value: number, min: number, max: number) => {
+export const unnormalize = (value: number, min: number, max: number) => {
   return value * (max - min) + min
 }
 

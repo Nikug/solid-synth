@@ -1,5 +1,5 @@
 import { Component, Show, createSignal } from "solid-js"
-import { easeInCubic, easeOutCubic, fromPercentage, toPercentage } from "../math/curves"
+import { easeInCubic, easeOutCubic, unnormalize, normalize } from "../math/curves"
 
 const minAngle = -133
 const maxAngle = 133
@@ -20,8 +20,8 @@ export const Knob: Component<Props> = (props) => {
   const [originalValue, setOriginalValue] = createSignal<number | null>(null)
   const [knobRotation, setKnobRotation] = createSignal(
     props.exponential
-      ? easeOutCubic(toPercentage(props.value, props.min, props.max))
-      : toPercentage(props.value, props.min, props.max),
+      ? easeOutCubic(normalize(props.value, props.min, props.max))
+      : normalize(props.value, props.min, props.max),
   )
 
   const getRotation = () => {
@@ -59,9 +59,9 @@ export const Knob: Component<Props> = (props) => {
 
     if (props.exponential) {
       const cubic = easeInCubic(newValue)
-      props.onChange(fromPercentage(cubic, props.min, props.max))
+      props.onChange(unnormalize(cubic, props.min, props.max))
     } else {
-      props.onChange(fromPercentage(newValue, props.min, props.max))
+      props.onChange(unnormalize(newValue, props.min, props.max))
     }
   }
 
