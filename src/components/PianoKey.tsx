@@ -30,7 +30,12 @@ export const PianoKey: Component<Props> = (props) => {
 
   const getClasses = () => {
     if (isKeyPressed()) {
-      return clsx("shadow", props.isBlack ? "text-white bg-blue-950" : "text-black bg-blue-100")
+      return clsx(
+        "shadow",
+        props.isBlack
+          ? "text-white bg-black bg-gradient-to-b from-transparent to-blue-950"
+          : "text-black bg-white bg-gradient-to-b from-transparent to-blue-100",
+      )
     } else {
       return clsx("shadow-xl", props.isBlack ? "text-white bg-black" : "text-black bg-white")
     }
