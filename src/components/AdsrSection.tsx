@@ -12,6 +12,7 @@ export const AdsrSection: Component = () => {
         <Knob
           label="Attack"
           unit="ms"
+          exponential
           value={settings.volumeAdsr.attack}
           min={0}
           max={maxDuration}
@@ -20,6 +21,7 @@ export const AdsrSection: Component = () => {
         <Knob
           label="Hold"
           unit="ms"
+          exponential
           value={settings.volumeAdsr.hold}
           min={0}
           max={maxDuration}
@@ -28,6 +30,7 @@ export const AdsrSection: Component = () => {
         <Knob
           label="Decay"
           unit="ms"
+          exponential
           value={settings.volumeAdsr.decay}
           min={0}
           max={maxDuration}
@@ -43,6 +46,7 @@ export const AdsrSection: Component = () => {
         <Knob
           label="Release"
           unit="ms"
+          exponential
           value={settings.volumeAdsr.release}
           min={0}
           max={maxDuration}

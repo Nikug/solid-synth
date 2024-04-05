@@ -37,7 +37,7 @@ export const Piano: Component = () => {
           min={0}
           max={1}
           onChange={(value) => setSettings("volume", value)}
-          label="Volume"
+          label="Main volume"
         />
         <AdsrSection />
       </div>
