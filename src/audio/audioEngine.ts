@@ -1,4 +1,4 @@
-import { Adsr } from "./settingsStore"
+import { Adsr, OscillatorSettings } from "./settingsStore"
 
 export const audioContext = new AudioContext()
 export const outputGain = audioContext.createGain()
@@ -12,11 +12,11 @@ interface Oscillator {
   volumeAdsr: Adsr
 }
 
-export const playNote = (frequency: number, volumeAdsr: Adsr) => {
+export const playNote = (frequency: number, volumeAdsr: Adsr, settings: OscillatorSettings) => {
   if (oscillators[frequency]) return
 
-  const oscillator = createOscillator(volumeAdsr)
-  oscillator.oscillator.type = "sine"
+  const oscillator = createOscillator(volumeAdsr, settings)
+  oscillator.oscillator.type = settings.waveform
   oscillator.oscillator.frequency.value = frequency
   oscillator.oscillator.start()
   oscillators.set(frequency, oscillator)
@@ -39,11 +39,14 @@ export const stopAllNotes = () => {
   })
 }
 
-const createOscillator = (volumeAdsr: Adsr): Oscillator => {
+const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscillator => {
   const audioGain = audioContext.createGain()
   audioGain.connect(outputGain)
   audioGain.gain.setValueAtTime(0, audioContext.currentTime)
-  audioGain.gain.linearRampToValueAtTime(1, audioContext.currentTime + volumeAdsr.attack / 1000)
+  audioGain.gain.linearRampToValueAtTime(
+    settings.gain,
+    audioContext.currentTime + volumeAdsr.attack / 1000,
+  )
   audioGain.gain.linearRampToValueAtTime(
     volumeAdsr.sustain,
     audioContext.currentTime +

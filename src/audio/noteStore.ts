@@ -1,7 +1,6 @@
 import { createStore } from "solid-js/store"
 import { playNote, stopAllNotes, stopNote } from "./audioEngine"
 import { Note, NoteFrequencies, Octave } from "../constants"
-import { copyAdsr } from "../utils"
 import { settings } from "./settingsStore"
 
 interface Notes {
@@ -50,7 +49,7 @@ export const setOctave = (octave: Octave) => {
   })
 
   notes.activeNotes.forEach((value) => {
-    playNote(value.frequency, copyAdsr(settings.volumeAdsr))
+    playNote(value.frequency, settings.volumeAdsr, settings.oscillators[0])
   })
 }
 
@@ -67,7 +66,7 @@ export const addNote = (note: Note, octave: Octave) => {
     return new Map(activeNotes)
   })
 
-  playNote(activeNote.frequency, copyAdsr(settings.volumeAdsr))
+  playNote(activeNote.frequency, settings.volumeAdsr, settings.oscillators[0])
 }
 
 export const removeNote = (note: Note, octave: Octave) => {

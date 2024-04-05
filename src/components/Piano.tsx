@@ -6,6 +6,7 @@ import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 import { Knob } from "./Knob"
 import { settings, setSettings } from "../audio/settingsStore"
 import { AdsrSection } from "./AdsrSection"
+import { OscillatorSection } from "./OscillatorSection"
 
 interface Key {
   note: Note
@@ -39,7 +40,8 @@ export const Piano: Component = () => {
           onChange={(value) => setSettings("volume", value)}
           label="Main volume"
         />
-        <AdsrSection />
+        <OscillatorSection id={0} />
+        <AdsrSection label="Volume" settingKey="volumeAdsr" />
       </div>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">

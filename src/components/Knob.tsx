@@ -93,7 +93,7 @@ export const Knob: Component<Props> = (props) => {
           class="absolute w-0.5 h-1 bg-gray-700 rounded-full bottom-0.5 right-0.5"
         />
       </div>
-      <div class="h-4">
+      <div class="h-6">
         <Show
           when={dragStart() !== null}
           fallback={<p class="text-sm text-gray-600 leading-3 mt-2">{props.label}</p>}
