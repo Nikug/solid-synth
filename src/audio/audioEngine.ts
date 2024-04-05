@@ -1,4 +1,6 @@
-const audioContext = new AudioContext()
+export const audioContext = new AudioContext()
+export const outputGain = audioContext.createGain()
+outputGain.connect(audioContext.destination)
 const oscillators: Map<number, Oscillator> = new Map()
 
 interface Oscillator {
@@ -39,7 +41,7 @@ export const stopAllNotes = () => {
 
 const createOscillator = (): Oscillator => {
   const audioGain = audioContext.createGain()
-  audioGain.connect(audioContext.destination)
+  audioGain.connect(outputGain)
   audioGain.gain.value = 0.5
 
   const oscillator = audioContext.createOscillator()

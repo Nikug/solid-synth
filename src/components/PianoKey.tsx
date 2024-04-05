@@ -43,7 +43,7 @@ export const PianoKey: Component<Props> = (props) => {
         "border-2 rounded h-32 w-16 py-1 flex flex-col justify-between items-center select-none transition-all duration-100",
       )}
       onMouseDown={handleClickStart}
-      onMouseOver={handleClickStart}
+      onMouseEnter={handleClickStart}
       onMouseUp={handleClickEnd}
       onMouseLeave={handleClickEnd}
     >
