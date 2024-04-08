@@ -47,6 +47,9 @@ const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscil
     settings.gain,
     audioContext.currentTime + volumeAdsr.attack / 1000,
   )
+
+  // Todo: Fix hold, it needs hold for certain amount before starting to decay
+
   audioGain.gain.linearRampToValueAtTime(
     volumeAdsr.sustain,
     audioContext.currentTime +
