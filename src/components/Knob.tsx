@@ -13,6 +13,7 @@ interface Props {
   onChange: (value: number) => void
   unit?: string
   exponential?: boolean
+  step?: number
 }
 
 export const Knob: Component<Props> = (props) => {
@@ -59,14 +60,28 @@ export const Knob: Component<Props> = (props) => {
 
     if (props.exponential) {
       const cubic = easeInCubic(newValue)
-      props.onChange(unnormalize(cubic, props.min, props.max))
+      const unnormalized = unnormalize(cubic, props.min, props.max)
+      props.onChange(applyStep(unnormalized))
     } else {
-      props.onChange(unnormalize(newValue, props.min, props.max))
+      const unnormalized = unnormalize(newValue, props.min, props.max)
+      props.onChange(applyStep(unnormalized))
+    }
+  }
+
+  const applyStep = (value: number) => {
+    if (props.step) {
+      return Math.round(value / props.step) * props.step
+    } else {
+      return value
     }
   }
 
   const humanReadableNumber = (value: number) => {
-    const n = Math.log(value) / Math.LN10
+    if (value === 0) return "0"
+
+    const positiveValue = Math.abs(value)
+
+    const n = Math.log(positiveValue) / Math.LN10
     let decimals = 3 - n
     if (decimals < 0) decimals = 0
     if (decimals > 3) decimals = 3

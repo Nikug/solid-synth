@@ -49,7 +49,7 @@ export const setOctave = (octave: Octave) => {
   })
 
   notes.activeNotes.forEach((value) => {
-    playNote(value.frequency, settings.volumeAdsr, settings.oscillators[0])
+    playNote(value.frequency, settings)
   })
 }
 
@@ -66,7 +66,7 @@ export const addNote = (note: Note, octave: Octave) => {
     return new Map(activeNotes)
   })
 
-  playNote(activeNote.frequency, settings.volumeAdsr, settings.oscillators[0])
+  playNote(activeNote.frequency, settings)
 }
 
 export const removeNote = (note: Note, octave: Octave) => {

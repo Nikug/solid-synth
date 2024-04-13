@@ -19,6 +19,7 @@ export interface Adsr {
 }
 
 export interface OscillatorSettings {
+  enabled: boolean
   waveform: OscillatorType
   gain: number
   pitch: number
@@ -34,7 +35,10 @@ const newSettings = (): Settings => ({
     sustain: 0.2,
     release: 300,
   },
-  oscillators: { 0: { waveform: "sine", gain: 0.5, pitch: 0, panning: 0 } },
+  oscillators: {
+    1: { enabled: true, waveform: "sine", gain: 0.5, pitch: 0, panning: 0 },
+    2: { enabled: true, waveform: "triangle", gain: 0.5, pitch: 0, panning: 0 },
+  },
 })
 
 export const [settings, setSettings] = createStore<Settings>(newSettings())

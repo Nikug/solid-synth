@@ -3,6 +3,7 @@ import { ToggleButton } from "./ToggleButton"
 import { TbTriangle, TbWaveSawTool, TbWaveSine, TbWaveSquare } from "solid-icons/tb"
 import { setSettings, settings } from "../audio/settingsStore"
 import { Knob } from "./Knob"
+import { RiMediaVolumeUpFill } from "solid-icons/ri"
 
 interface Props {
   id: number
@@ -11,7 +12,15 @@ interface Props {
 export const OscillatorSection: Component<Props> = (props) => {
   return (
     <div class="border rounded-lg p-4">
-      <h3 class="mb-2">Oscillator 1</h3>
+      <div class="flex gap-2">
+        <ToggleButton
+          selected={settings.oscillators[props.id]?.enabled}
+          onChange={(value) => setSettings("oscillators", props.id, "enabled", value)}
+        >
+          <RiMediaVolumeUpFill size={20} />
+        </ToggleButton>
+        <h3 class="mb-2">Oscillator {props.id}</h3>
+      </div>
       <div class="flex gap-1 mb-2">
         <div class="grid grid-cols-2 gap-1">
           <ToggleButton
@@ -50,8 +59,9 @@ export const OscillatorSection: Component<Props> = (props) => {
           <Knob
             label="Pitch"
             value={settings.oscillators[props.id]?.pitch}
-            min={0}
-            max={1}
+            min={-12}
+            max={12}
+            step={1}
             onChange={(value) => setSettings("oscillators", props.id, "pitch", value)}
           />
           <Knob

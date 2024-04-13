@@ -1,40 +1,46 @@
-import { Adsr, OscillatorSettings } from "./settingsStore"
+import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 
 export const audioContext = new AudioContext()
 export const outputGain = audioContext.createGain()
 outputGain.connect(audioContext.destination)
-const oscillators: Map<number, Oscillator> = new Map()
+const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
 
 interface Oscillator {
   oscillator: OscillatorNode
   audioGain: GainNode
+  adsrGain: GainNode
   volumeAdsr: Adsr
 }
 
-export const playNote = (frequency: number, volumeAdsr: Adsr, settings: OscillatorSettings) => {
+export const playNote = (frequency: number, settings: Settings) => {
   if (oscillators[frequency]) return
 
-  const oscillator = createOscillator(volumeAdsr, settings)
-  oscillator.oscillator.type = settings.waveform
-  oscillator.oscillator.frequency.value = frequency
-  oscillator.oscillator.start()
-  oscillators.set(frequency, oscillator)
+  const newOscillators: Oscillator[] = []
+  for (const [key, oscillatorSettings] of Object.entries(settings.oscillators)) {
+    const oscillator = createOscillator(settings.volumeAdsr, oscillatorSettings)
+    oscillator.oscillator.type = oscillatorSettings.waveform
+    oscillator.oscillator.frequency.value = frequency
+    oscillator.oscillator.start()
+    newOscillators.push(oscillator)
+  }
+  oscillators.set(frequency, newOscillators)
 }
 
 export const stopNote = (frequency: number) => {
-  const oscillator = oscillators.get(frequency)
-  if (oscillator) {
+  const oscs = oscillators.get(frequency)
+  if (oscs) {
     oscillators.delete(frequency)
-    moveToRelease(oscillator)
+    oscs.forEach(moveToRelease)
   }
 }
 
 export const stopAllNotes = () => {
-  oscillators.forEach((oscillator) => {
-    if (oscillator) {
-      oscillator.oscillator.stop()
-      oscillators.delete(oscillator.oscillator.frequency.value)
+  oscillators.forEach((oscs) => {
+    if (oscs && oscs.length > 0) {
+      const frequency = oscs[0].oscillator.frequency.value
+      oscs.forEach((osc) => osc.oscillator.stop())
+      oscillators.delete(frequency)
     }
   })
 }
@@ -42,18 +48,20 @@ export const stopAllNotes = () => {
 const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscillator => {
   const audioGain = audioContext.createGain()
   audioGain.connect(outputGain)
-  audioGain.gain.setValueAtTime(0, audioContext.currentTime)
-  audioGain.gain.linearRampToValueAtTime(
-    settings.gain,
-    audioContext.currentTime + volumeAdsr.attack / 1000,
-  )
+  audioGain.gain.setValueAtTime(settings.gain, audioContext.currentTime)
 
-  audioGain.gain.linearRampToValueAtTime(
-    settings.gain,
+  const adsrGain = audioContext.createGain()
+  adsrGain.connect(audioGain)
+
+  adsrGain.gain.setValueAtTime(0, audioContext.currentTime)
+  adsrGain.gain.linearRampToValueAtTime(1, audioContext.currentTime + volumeAdsr.attack / 1000)
+
+  adsrGain.gain.linearRampToValueAtTime(
+    1,
     audioContext.currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
   )
 
-  audioGain.gain.linearRampToValueAtTime(
+  adsrGain.gain.linearRampToValueAtTime(
     volumeAdsr.sustain,
     audioContext.currentTime +
       volumeAdsr.attack / 1000 +
@@ -62,10 +70,11 @@ const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscil
   )
 
   const oscillator = audioContext.createOscillator()
-  oscillator.connect(audioGain)
+  oscillator.connect(adsrGain)
   return {
     oscillator,
     audioGain,
+    adsrGain,
     volumeAdsr: volumeAdsr,
   }
 }
@@ -73,10 +82,10 @@ const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscil
 const moveToRelease = (oscillator: Oscillator) => {
   releasingOscillators.add(oscillator)
   const removeTime = oscillator.volumeAdsr.release
-  const gain = oscillator.audioGain.gain.value
-  oscillator.audioGain.gain.cancelScheduledValues(audioContext.currentTime)
-  oscillator.audioGain.gain.setValueAtTime(gain, audioContext.currentTime)
-  oscillator.audioGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + removeTime / 1000)
+  const gain = oscillator.adsrGain.gain.value
+  oscillator.adsrGain.gain.cancelScheduledValues(audioContext.currentTime)
+  oscillator.adsrGain.gain.setValueAtTime(gain, audioContext.currentTime)
+  oscillator.adsrGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + removeTime / 1000)
   setTimeout(() => {
     oscillator.oscillator.stop()
     releasingOscillators.delete(oscillator)

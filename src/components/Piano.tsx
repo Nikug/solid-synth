@@ -32,7 +32,7 @@ export const Piano: Component = () => {
 
   return (
     <div class="p-8 border-2 rounded-xl shadow-xl bg-gray-100">
-      <div class="w-full flex justify-start items-center gap-4 mb-4">
+      <div class="w-full flex justify-start items-center gap-4 mb-4 flex-wrap">
         <Knob
           value={settings.volume}
           min={0}
@@ -40,7 +40,8 @@ export const Piano: Component = () => {
           onChange={(value) => setSettings("volume", value)}
           label="Main volume"
         />
-        <OscillatorSection id={0} />
+        <OscillatorSection id={1} />
+        <OscillatorSection id={2} />
         <AdsrSection label="Volume" settingKey="volumeAdsr" />
       </div>
       <div class="flex gap-4">
