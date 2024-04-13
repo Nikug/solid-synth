@@ -1,5 +1,8 @@
 export const normalize = (value: number, min: number, max: number) => {
-  return (value - min) / (max - min)
+  const newValue = (value - min) / (max - min)
+  if (newValue < 0) return 0
+  if (newValue > 1) return 1
+  return newValue
 }
 
 export const unnormalize = (value: number, min: number, max: number) => {

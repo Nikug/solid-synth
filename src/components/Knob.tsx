@@ -18,11 +18,12 @@ interface Props {
 export const Knob: Component<Props> = (props) => {
   const [dragStart, setDragStart] = createSignal<number | null>(null)
   const [originalValue, setOriginalValue] = createSignal<number | null>(null)
-  const [knobRotation, setKnobRotation] = createSignal(
-    props.exponential
+
+  const knobRotation = () => {
+    return props.exponential
       ? easeOutCubic(normalize(props.value, props.min, props.max))
-      : normalize(props.value, props.min, props.max),
-  )
+      : normalize(props.value, props.min, props.max)
+  }
 
   const getRotation = () => {
     const range = maxAngle - minAngle
@@ -55,7 +56,6 @@ export const Knob: Component<Props> = (props) => {
     let newValue = originalValue() + change
     if (newValue < 0) newValue = 0
     if (newValue > 1) newValue = 1
-    setKnobRotation(newValue)
 
     if (props.exponential) {
       const cubic = easeInCubic(newValue)
