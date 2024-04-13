@@ -37,7 +37,8 @@ const newSettings = (): Settings => ({
   },
   oscillators: {
     1: { enabled: true, waveform: "sine", gain: 0.5, pitch: 0, panning: 0 },
-    2: { enabled: true, waveform: "triangle", gain: 0.5, pitch: 0, panning: 0 },
+    2: { enabled: true, waveform: "sine", gain: 0.5, pitch: -12, panning: 0 },
+    3: { enabled: true, waveform: "sine", gain: 0.5, pitch: 12, panning: 0 },
   },
 })
 

@@ -18,10 +18,9 @@ export const playNote = (frequency: number, settings: Settings) => {
 
   const newOscillators: Oscillator[] = []
   for (const [_key, oscillatorSettings] of Object.entries(settings.oscillators)) {
-    const oscillator = createOscillator(settings.volumeAdsr, oscillatorSettings)
-    oscillator.oscillator.type = oscillatorSettings.waveform
-    oscillator.oscillator.frequency.value = frequency
-    oscillator.oscillator.detune.value = oscillatorSettings.pitch * 100
+    if (!oscillatorSettings.enabled) continue
+
+    const oscillator = createOscillator(oscillatorSettings, settings, frequency)
     oscillator.oscillator.start()
     newOscillators.push(oscillator)
   }
@@ -46,12 +45,17 @@ export const stopAllNotes = () => {
   })
 }
 
-const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscillator => {
+const createOscillator = (
+  oscillatorSettings: OscillatorSettings,
+  settings: Settings,
+  frequency: number,
+): Oscillator => {
+  const volumeAdsr = settings.volumeAdsr
   const audioGain = audioContext.createGain()
-  audioGain.gain.setValueAtTime(settings.gain, audioContext.currentTime)
+  audioGain.gain.setValueAtTime(oscillatorSettings.gain, audioContext.currentTime)
 
   const panning = audioContext.createStereoPanner()
-  panning.pan.value = settings.panning
+  panning.pan.value = oscillatorSettings.panning
 
   // ADSR
   const adsrGain = audioContext.createGain()
@@ -73,6 +77,11 @@ const createOscillator = (volumeAdsr: Adsr, settings: OscillatorSettings): Oscil
   )
 
   const oscillator = audioContext.createOscillator()
+
+  oscillator.type = oscillatorSettings.waveform
+  oscillator.frequency.value = frequency
+  oscillator.detune.value = oscillatorSettings.pitch * 100
+
   oscillator.connect(adsrGain)
   adsrGain.connect(panning)
   panning.connect(audioGain)

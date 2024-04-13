@@ -43,6 +43,7 @@ export const Piano: Component = () => {
         />
         <OscillatorSection id={1} />
         <OscillatorSection id={2} />
+        <OscillatorSection id={3} />
         <AdsrSection label="Volume" settingKey="volumeAdsr" />
       </div>
       <div class="flex gap-4">
