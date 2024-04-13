@@ -23,6 +23,7 @@ export const AdsrSection: Component<Props> = (props) => {
           value={settings.volumeAdsr.attack}
           min={0}
           max={maxDuration}
+          defaultValue={1000}
           onChange={(value) => setSettings(props.settingKey, "attack", value)}
         />
         <Knob
@@ -32,6 +33,7 @@ export const AdsrSection: Component<Props> = (props) => {
           value={settings.volumeAdsr.hold}
           min={0}
           max={maxDuration}
+          defaultValue={1000}
           onChange={(value) => setSettings(props.settingKey, "hold", value)}
         />
         <Knob
@@ -41,6 +43,7 @@ export const AdsrSection: Component<Props> = (props) => {
           value={settings.volumeAdsr.decay}
           min={0}
           max={maxDuration}
+          defaultValue={1000}
           onChange={(value) => setSettings(props.settingKey, "decay", value)}
         />
         <Knob
@@ -48,6 +51,7 @@ export const AdsrSection: Component<Props> = (props) => {
           value={settings.volumeAdsr.sustain}
           min={0}
           max={1}
+          defaultValue={0.5}
           onChange={(value) => setSettings(props.settingKey, "sustain", value)}
         />
         <Knob
@@ -57,6 +61,7 @@ export const AdsrSection: Component<Props> = (props) => {
           value={settings.volumeAdsr.release}
           min={0}
           max={maxDuration}
+          defaultValue={1000}
           onChange={(value) => setSettings(props.settingKey, "release", value)}
         />
       </div>

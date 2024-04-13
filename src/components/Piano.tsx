@@ -37,6 +37,7 @@ export const Piano: Component = () => {
           value={settings.volume}
           min={0}
           max={1}
+          defaultValue={0.5}
           onChange={(value) => setSettings("volume", value)}
           label="Main volume"
         />

@@ -54,13 +54,15 @@ export const OscillatorSection: Component<Props> = (props) => {
             value={settings.oscillators[props.id]?.gain}
             min={0}
             max={1}
+            defaultValue={0.5}
             onChange={(value) => setSettings("oscillators", props.id, "gain", value)}
           />
           <Knob
             label="Pitch"
             value={settings.oscillators[props.id]?.pitch}
-            min={-12}
-            max={12}
+            min={-24}
+            max={24}
+            defaultValue={0}
             step={1}
             onChange={(value) => setSettings("oscillators", props.id, "pitch", value)}
           />
@@ -69,6 +71,7 @@ export const OscillatorSection: Component<Props> = (props) => {
             value={settings.oscillators[props.id]?.panning}
             min={-1}
             max={1}
+            defaultValue={0}
             onChange={(value) => setSettings("oscillators", props.id, "panning", value)}
           />
         </div>

@@ -7,6 +7,7 @@ const dragDistanceMultiplier = 0.01
 
 interface Props {
   value: number
+  defaultValue: number
   min: number
   max: number
   label: string
@@ -32,6 +33,11 @@ export const Knob: Component<Props> = (props) => {
   }
 
   const handleDragStart = (event: MouseEvent) => {
+    if (event.buttons === 4) {
+      props.onChange(props.defaultValue)
+      return
+    }
+
     setDragStart(event.clientY)
     setOriginalValue(knobRotation())
     addEventListener("mousemove", handleDrag)
