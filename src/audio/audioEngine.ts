@@ -1,3 +1,4 @@
+import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 
 export const audioContext = new AudioContext()
@@ -20,9 +21,17 @@ export const playNote = (frequency: number, settings: Settings) => {
   for (const [_key, oscillatorSettings] of Object.entries(settings.oscillators)) {
     if (!oscillatorSettings.enabled) continue
 
-    const oscillator = createOscillator(oscillatorSettings, settings, frequency)
-    oscillator.oscillator.start()
-    newOscillators.push(oscillator)
+    const unisonDetunes = calculateUnisonDetunes(
+      oscillatorSettings.unisonVoices,
+      oscillatorSettings.unisonDetune,
+    )
+
+    for (const detune of unisonDetunes) {
+      const oscillator = createOscillator(oscillatorSettings, settings, frequency)
+      oscillator.oscillator.start()
+      oscillator.oscillator.detune.value += detune * 100
+      newOscillators.push(oscillator)
+    }
   }
   oscillators.set(frequency, newOscillators)
 }

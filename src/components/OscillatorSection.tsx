@@ -92,7 +92,7 @@ export const OscillatorSection: Component<Props> = (props) => {
             label="Detune"
             value={settings.oscillators[props.id]?.unisonDetune}
             min={0}
-            max={12}
+            max={2}
             defaultValue={0}
             onChange={(value) => setSettings("oscillators", props.id, "unisonDetune", value)}
           />
