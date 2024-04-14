@@ -8,11 +8,10 @@ const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
 
 interface Oscillator {
-  oscillator: OscillatorNode
+  oscillators: OscillatorNode[]
   audioGain: GainNode
   adsrGain: GainNode
   volumeAdsr: Adsr
-  unisonPanning: StereoPannerNode
 }
 
 export const playNote = (frequency: number, settings: Settings) => {
@@ -22,19 +21,9 @@ export const playNote = (frequency: number, settings: Settings) => {
   for (const [_key, oscillatorSettings] of Object.entries(settings.oscillators)) {
     if (!oscillatorSettings.enabled) continue
 
-    const unisonValues = calculateUnisonDetunes(
-      oscillatorSettings.unisonVoices,
-      oscillatorSettings.unisonDetune,
-      oscillatorSettings.unisonWidth,
-    )
-
-    for (const value of unisonValues) {
-      const oscillator = createOscillator(oscillatorSettings, settings, frequency)
-      oscillator.oscillator.start()
-      oscillator.oscillator.detune.value += value.detune * 100
-      oscillator.unisonPanning.pan.value = value.panning
-      newOscillators.push(oscillator)
-    }
+    const oscillator = createOscillator(oscillatorSettings, settings, frequency)
+    oscillator.oscillators.forEach((osc) => osc.start())
+    newOscillators.push(oscillator)
   }
   oscillators.set(frequency, newOscillators)
 }
@@ -50,8 +39,8 @@ export const stopNote = (frequency: number) => {
 export const stopAllNotes = () => {
   oscillators.forEach((oscs) => {
     if (oscs && oscs.length > 0) {
-      const frequency = oscs[0].oscillator.frequency.value
-      oscs.forEach((osc) => osc.oscillator.stop())
+      const frequency = oscs[0].oscillators[0].frequency.value
+      oscs.forEach((osc) => osc.oscillators.forEach((osc) => osc.stop()))
       oscillators.delete(frequency)
     }
   })
@@ -68,7 +57,6 @@ const createOscillator = (
 
   const panning = audioContext.createStereoPanner()
   panning.pan.value = oscillatorSettings.panning
-  const unisonPanning = audioContext.createStereoPanner()
 
   // ADSR
   const adsrGain = audioContext.createGain()
@@ -89,23 +77,37 @@ const createOscillator = (
       volumeAdsr.decay / 1000,
   )
 
-  const oscillator = audioContext.createOscillator()
+  // Unison
+  const unisonValues = calculateUnisonDetunes(
+    oscillatorSettings.unisonVoices,
+    oscillatorSettings.unisonDetune,
+    oscillatorSettings.unisonWidth,
+  )
 
-  oscillator.type = oscillatorSettings.waveform
-  oscillator.frequency.value = frequency
-  oscillator.detune.value = oscillatorSettings.pitch * 100
+  const oscillators: OscillatorNode[] = []
+  for (const value of unisonValues) {
+    const oscillator = audioContext.createOscillator()
 
-  oscillator.connect(adsrGain)
-  adsrGain.connect(unisonPanning)
-  unisonPanning.connect(panning)
+    oscillator.type = oscillatorSettings.waveform
+    oscillator.frequency.value = frequency
+    oscillator.detune.value = (oscillatorSettings.pitch + value.detune) * 100
+
+    const unisonPanning = audioContext.createStereoPanner()
+    unisonPanning.pan.value = value.panning
+    oscillator.connect(unisonPanning)
+    unisonPanning.connect(adsrGain)
+
+    oscillators.push(oscillator)
+  }
+
+  adsrGain.connect(panning)
   panning.connect(audioGain)
   audioGain.connect(outputGain)
   return {
-    oscillator,
+    oscillators,
     audioGain,
     adsrGain,
     volumeAdsr,
-    unisonPanning,
   }
 }
 
@@ -117,7 +119,7 @@ const moveToRelease = (oscillator: Oscillator) => {
   oscillator.adsrGain.gain.setValueAtTime(gain, audioContext.currentTime)
   oscillator.adsrGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + removeTime / 1000)
   setTimeout(() => {
-    oscillator.oscillator.stop()
+    oscillator.oscillators.forEach((osc) => osc.stop())
     releasingOscillators.delete(oscillator)
   }, removeTime + 500)
 }
