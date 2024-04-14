@@ -12,6 +12,7 @@ interface Oscillator {
   audioGain: GainNode
   adsrGain: GainNode
   volumeAdsr: Adsr
+  unisonPanning: StereoPannerNode
 }
 
 export const playNote = (frequency: number, settings: Settings) => {
@@ -21,15 +22,17 @@ export const playNote = (frequency: number, settings: Settings) => {
   for (const [_key, oscillatorSettings] of Object.entries(settings.oscillators)) {
     if (!oscillatorSettings.enabled) continue
 
-    const unisonDetunes = calculateUnisonDetunes(
+    const unisonValues = calculateUnisonDetunes(
       oscillatorSettings.unisonVoices,
       oscillatorSettings.unisonDetune,
+      oscillatorSettings.unisonWidth,
     )
 
-    for (const detune of unisonDetunes) {
+    for (const value of unisonValues) {
       const oscillator = createOscillator(oscillatorSettings, settings, frequency)
       oscillator.oscillator.start()
-      oscillator.oscillator.detune.value += detune * 100
+      oscillator.oscillator.detune.value += value.detune * 100
+      oscillator.unisonPanning.pan.value = value.panning
       newOscillators.push(oscillator)
     }
   }
@@ -65,6 +68,7 @@ const createOscillator = (
 
   const panning = audioContext.createStereoPanner()
   panning.pan.value = oscillatorSettings.panning
+  const unisonPanning = audioContext.createStereoPanner()
 
   // ADSR
   const adsrGain = audioContext.createGain()
@@ -92,14 +96,16 @@ const createOscillator = (
   oscillator.detune.value = oscillatorSettings.pitch * 100
 
   oscillator.connect(adsrGain)
-  adsrGain.connect(panning)
+  adsrGain.connect(unisonPanning)
+  unisonPanning.connect(panning)
   panning.connect(audioGain)
   audioGain.connect(outputGain)
   return {
     oscillator,
     audioGain,
     adsrGain,
-    volumeAdsr: volumeAdsr,
+    volumeAdsr,
+    unisonPanning,
   }
 }
 

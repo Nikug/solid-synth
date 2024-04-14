@@ -96,6 +96,14 @@ export const OscillatorSection: Component<Props> = (props) => {
             defaultValue={0}
             onChange={(value) => setSettings("oscillators", props.id, "unisonDetune", value)}
           />
+          <Knob
+            label="Width"
+            value={settings.oscillators[props.id]?.unisonWidth}
+            min={0}
+            max={1}
+            defaultValue={0}
+            onChange={(value) => setSettings("oscillators", props.id, "unisonWidth", value)}
+          />
         </div>
       </div>
     </div>

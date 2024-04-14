@@ -27,6 +27,7 @@ export interface OscillatorSettings {
   panning: number
   unisonVoices: number
   unisonDetune: number
+  unisonWidth: number
 }
 
 const newSettings = (): Settings => ({
@@ -48,6 +49,7 @@ const newSettings = (): Settings => ({
       panning: 0,
       unisonVoices: 1,
       unisonDetune: 0,
+      unisonWidth: 0.5,
     },
     2: {
       enabled: true,
@@ -57,6 +59,7 @@ const newSettings = (): Settings => ({
       panning: 0,
       unisonVoices: 1,
       unisonDetune: 0,
+      unisonWidth: 0.5,
     },
     3: {
       enabled: true,
@@ -66,6 +69,7 @@ const newSettings = (): Settings => ({
       panning: 0,
       unisonVoices: 1,
       unisonDetune: 0,
+      unisonWidth: 0.5,
     },
   },
 })

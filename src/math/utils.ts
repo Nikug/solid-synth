@@ -1,15 +1,26 @@
-export const calculateUnisonDetunes = (unisonVoices: number, unisonDetune: number): number[] => {
-  if (unisonVoices === 1) return [0]
+interface UnisonValues {
+  detune: number
+  panning: number
+}
+
+export const calculateUnisonDetunes = (
+  unisonVoices: number,
+  unisonDetune: number,
+  unisonWidth: number,
+): UnisonValues[] => {
+  if (unisonVoices === 1) return [{ detune: 0, panning: 0 }]
 
   const min = -unisonDetune / 2
+  const minPan = -unisonWidth
 
-  const detunes: number[] = []
+  const values: UnisonValues[] = []
   const step = unisonDetune / (unisonVoices - 1)
+  const panStep = (unisonWidth * 2) / (unisonVoices - 1)
   for (let i = 0; i < unisonVoices; i++) {
-    detunes.push(i * step + min)
+    const detune = i * step + min
+    const panning = i * panStep + minPan
+    values.push({ detune, panning })
   }
 
-  console.log(detunes)
-
-  return detunes
+  return values
 }
