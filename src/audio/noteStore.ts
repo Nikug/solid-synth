@@ -55,6 +55,8 @@ export const setOctave = (octave: Octave) => {
 
 export const addNote = (note: Note, octave: Octave) => {
   const key = createNoteName(octave, note)
+  if (notes.activeNotes.has(key)) return
+
   const activeNote = {
     note: note,
     octave: octave,

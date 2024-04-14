@@ -1,5 +1,6 @@
 import { Component, Show, createSignal } from "solid-js"
 import { easeInCubic, easeOutCubic, unnormalize, normalize } from "../math/curves"
+import { setSettings } from "../audio/settingsStore"
 
 const minAngle = -133
 const maxAngle = 133
@@ -40,12 +41,14 @@ export const Knob: Component<Props> = (props) => {
 
     setDragStart(event.clientY)
     setOriginalValue(knobRotation())
+    setSettings("isKnobActive", true)
     addEventListener("mousemove", handleDrag)
   }
 
   const handleDragEnd = () => {
     setDragStart(null)
     setOriginalValue(null)
+    setSettings("isKnobActive", false)
     removeEventListener("mousemove", handleDrag)
   }
 

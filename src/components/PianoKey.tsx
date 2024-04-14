@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { Component } from "solid-js"
 import { addNote, createNoteName, noteBuffer, removeNote } from "../audio/noteStore"
 import { Note, Octave } from "../constants"
+import { settings } from "../audio/settingsStore"
 
 interface Props {
   note: Note
@@ -14,10 +15,17 @@ export const PianoKey: Component<Props> = (props) => {
   const handleClickStart = (event: MouseEvent) => {
     event.preventDefault()
     if (event.buttons === 0) return
+    if (settings.isKnobActive) return
     addNote(props.note, props.octave)
   }
 
+  const handleMouseLeave = (event: MouseEvent) => {
+    if (event.buttons === 0) return
+    handleClickEnd(event)
+  }
+
   const handleClickEnd = (event: MouseEvent) => {
+    if (settings.isKnobActive) return
     event.preventDefault()
     removeNote(props.note, props.octave)
   }
@@ -50,7 +58,7 @@ export const PianoKey: Component<Props> = (props) => {
       onMouseDown={handleClickStart}
       onMouseEnter={handleClickStart}
       onMouseUp={handleClickEnd}
-      onMouseLeave={handleClickEnd}
+      onMouseLeave={handleMouseLeave}
     >
       <p>{props.note}</p>
       <p class="opacity-50">{props.key}</p>

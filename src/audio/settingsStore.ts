@@ -5,6 +5,7 @@ import { audioContext, outputGain } from "./audioEngine"
 const changeSmoothing = 1 / 60
 
 export interface Settings {
+  isKnobActive: boolean
   volume: number
   volumeAdsr: Adsr
   oscillators: Record<number, OscillatorSettings>
@@ -27,6 +28,7 @@ export interface OscillatorSettings {
 }
 
 const newSettings = (): Settings => ({
+  isKnobActive: false,
   volume: 0.5,
   volumeAdsr: {
     attack: 10,
