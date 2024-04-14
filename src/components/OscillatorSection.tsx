@@ -4,6 +4,7 @@ import { TbTriangle, TbWaveSawTool, TbWaveSine, TbWaveSquare } from "solid-icons
 import { setSettings, settings } from "../audio/settingsStore"
 import { Knob } from "./Knob"
 import { RiMediaVolumeUpFill } from "solid-icons/ri"
+import { NumberKnob } from "./NumberKnob"
 
 interface Props {
   id: number
@@ -73,6 +74,27 @@ export const OscillatorSection: Component<Props> = (props) => {
             max={1}
             defaultValue={0}
             onChange={(value) => setSettings("oscillators", props.id, "panning", value)}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 class="w-full border-t mb-1">Unison</h3>
+        <div class="flex gap-2">
+          <NumberKnob
+            value={settings.oscillators[props.id]?.unisonVoices}
+            min={1}
+            max={16}
+            defaultValue={1}
+            label="Voices"
+            onChange={(value) => setSettings("oscillators", props.id, "unisonVoices", value)}
+          />
+          <Knob
+            label="Detune"
+            value={settings.oscillators[props.id]?.unisonDetune}
+            min={0}
+            max={12}
+            defaultValue={0}
+            onChange={(value) => setSettings("oscillators", props.id, "unisonDetune", value)}
           />
         </div>
       </div>

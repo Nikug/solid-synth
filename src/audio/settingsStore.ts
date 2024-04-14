@@ -25,6 +25,8 @@ export interface OscillatorSettings {
   gain: number
   pitch: number
   panning: number
+  unisonVoices: number
+  unisonDetune: number
 }
 
 const newSettings = (): Settings => ({
@@ -38,9 +40,33 @@ const newSettings = (): Settings => ({
     release: 300,
   },
   oscillators: {
-    1: { enabled: true, waveform: "sine", gain: 0.5, pitch: 0, panning: 0 },
-    2: { enabled: true, waveform: "sine", gain: 0.5, pitch: -12, panning: 0 },
-    3: { enabled: true, waveform: "sine", gain: 0.5, pitch: 12, panning: 0 },
+    1: {
+      enabled: true,
+      waveform: "sine",
+      gain: 0.5,
+      pitch: 0,
+      panning: 0,
+      unisonVoices: 1,
+      unisonDetune: 0,
+    },
+    2: {
+      enabled: true,
+      waveform: "sine",
+      gain: 0.5,
+      pitch: -12,
+      panning: 0,
+      unisonVoices: 1,
+      unisonDetune: 0,
+    },
+    3: {
+      enabled: true,
+      waveform: "sine",
+      gain: 0.5,
+      pitch: 12,
+      panning: 0,
+      unisonVoices: 1,
+      unisonDetune: 0,
+    },
   },
 })
 
