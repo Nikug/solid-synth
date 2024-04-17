@@ -22,7 +22,7 @@ export const OscillatorSection: Component<Props> = (props) => {
         </ToggleButton>
         <h3 class="mb-2">Oscillator {props.id}</h3>
       </div>
-      <div class="flex gap-1 mb-2">
+      <div class="flex gap-1 mb-2 items-start">
         <div class="grid grid-cols-2 gap-1">
           <ToggleButton
             selected={settings.oscillators[props.id]?.waveform === "sine"}
@@ -74,6 +74,14 @@ export const OscillatorSection: Component<Props> = (props) => {
             max={1}
             defaultValue={0}
             onChange={(value) => setSettings("oscillators", props.id, "panning", value)}
+          />
+          <Knob
+            label="Phase"
+            value={settings.oscillators[props.id]?.phase}
+            min={0}
+            max={360}
+            defaultValue={0}
+            onChange={(value) => setSettings("oscillators", props.id, "phase", value)}
           />
         </div>
       </div>

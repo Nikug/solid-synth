@@ -1,3 +1,5 @@
+import { sineWave } from "../math/oscillators"
+import { random } from "../math/random"
 import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 
@@ -88,7 +90,12 @@ const createOscillator = (
   for (const value of unisonValues) {
     const oscillator = audioContext.createOscillator()
 
-    oscillator.type = oscillatorSettings.waveform
+    if (oscillatorSettings.waveform === "sine") {
+      oscillator.setPeriodicWave(audioContext.createPeriodicWave(...sineWave(random(0, 359))))
+    } else {
+      oscillator.type = oscillatorSettings.waveform
+    }
+
     oscillator.frequency.value = frequency
     oscillator.detune.value = (oscillatorSettings.pitch + value.detune) * 100
 

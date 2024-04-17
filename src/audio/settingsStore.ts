@@ -25,6 +25,7 @@ export interface OscillatorSettings {
   gain: number
   pitch: number
   panning: number
+  phase: number
   unisonVoices: number
   unisonDetune: number
   unisonWidth: number
@@ -47,26 +48,29 @@ const newSettings = (): Settings => ({
       gain: 0.5,
       pitch: 0,
       panning: 0,
+      phase: 0,
       unisonVoices: 1,
       unisonDetune: 0,
       unisonWidth: 0.5,
     },
     2: {
-      enabled: true,
+      enabled: false,
       waveform: "sine",
       gain: 0.5,
       pitch: -12,
       panning: 0,
+      phase: 0,
       unisonVoices: 1,
       unisonDetune: 0,
       unisonWidth: 0.5,
     },
     3: {
-      enabled: true,
+      enabled: false,
       waveform: "sine",
       gain: 0.5,
       pitch: 12,
       panning: 0,
+      phase: 0,
       unisonVoices: 1,
       unisonDetune: 0,
       unisonWidth: 0.5,
