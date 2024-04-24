@@ -1,9 +1,12 @@
 import { Worklets, Message } from "./constants"
 
+const declickSamples = 32
+
 export default class Oscillator extends AudioWorkletProcessor {
   active = null
   d = 0
   previousFrequency = 440
+  firstRun = true
 
   constructor(...args) {
     super(...args)
@@ -40,10 +43,19 @@ export default class Oscillator extends AudioWorkletProcessor {
     for (let i = 0; i < channelLength; ++i) {
       const sampleFrequency = frequency.length > 1 ? frequency[i] : frequency[0]
       const globalTime = currentTime + i / sampleRate
+
       this.d += globalTime * (this.previousFrequency - sampleFrequency)
       this.previousFrequency = sampleFrequency
       const time = globalTime * sampleFrequency + this.d
+
       values[i] = Math.sin(2 * Math.PI * time)
+    }
+
+    // Declick
+    if (this.firstRun) {
+      for (let i = 0; i < declickSamples; ++i) {
+        values[i] = values[i] * (i / declickSamples)
+      }
     }
 
     for (const output of outputs) {
@@ -52,6 +64,7 @@ export default class Oscillator extends AudioWorkletProcessor {
       }
     }
 
+    this.firstRun = false
     return true
   }
 }
