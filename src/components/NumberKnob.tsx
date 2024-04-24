@@ -55,12 +55,22 @@ export const NumberKnob: Component<Props> = (props) => {
     props.onChange(Math.round(unnormalized))
   }
 
+  const handleScrollWheel = (event: WheelEvent) => {
+    event.preventDefault()
+    const isUp = event.deltaY < 0
+    let newValue = isUp ? props.value + 1 : props.value - 1
+    if (newValue < props.min) newValue = props.min
+    if (newValue > props.max) newValue = props.max
+    props.onChange(newValue)
+  }
+
   return (
     <div class="flex flex-col items-center w-14 text-center text-wrap">
       <div class="">
         <div
           class="px-1 py-2 rounded border flex justify-center items-center cursor-pointer bg-gray-200"
           onMouseDown={handleDragStart}
+          onWheel={handleScrollWheel}
         >
           <p class="text-sm text-gray-600 leading-3">{props.value}</p>
         </div>
