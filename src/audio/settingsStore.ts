@@ -1,6 +1,5 @@
-import { createEffect } from "solid-js"
 import { createStore } from "solid-js/store"
-import { audioContext, outputGain } from "./audioEngine"
+import { audioContext, outputGain } from "./audioContextWrapper"
 
 const changeSmoothing = 1 / 60
 
@@ -80,10 +79,11 @@ const newSettings = (): Settings => ({
 
 export const [settings, setSettings] = createStore<Settings>(newSettings())
 
-createEffect(() => {
-  outputGain.gain.setTargetAtTime(
+export const setGlobalVolume = (value: number) => {
+  setSettings("volume", value)
+  outputGain().gain.setTargetAtTime(
     settings.volume,
-    audioContext.currentTime + changeSmoothing,
+    audioContext().currentTime + changeSmoothing,
     changeSmoothing,
   )
-})
+}

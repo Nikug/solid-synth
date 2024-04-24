@@ -2,6 +2,7 @@
   "name": "solid-piano",
   "version": "0.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -26,7 +27,7 @@
     "typescript": "^5.3.3",
     "uvu": "^0.5.6",
     "vite": "^5.0.11",
-    "vite-plugin-solid": "^2.8.2"
+    "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
     "clsx": "^2.1.0",

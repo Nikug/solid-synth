@@ -4,7 +4,7 @@ import { PianoKey } from "./PianoKey"
 import { noteBuffer, setOctave } from "../audio/noteStore"
 import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 import { Knob } from "./Knob"
-import { settings, setSettings } from "../audio/settingsStore"
+import { settings, setGlobalVolume } from "../audio/settingsStore"
 import { AdsrSection } from "./AdsrSection"
 import { OscillatorSection } from "./OscillatorSection"
 
@@ -38,7 +38,7 @@ export const Piano: Component = () => {
           min={0}
           max={1}
           defaultValue={0.5}
-          onChange={(value) => setSettings("volume", value)}
+          onChange={(value) => setGlobalVolume(value)}
           label="Main volume"
         />
         <OscillatorSection id={1} />

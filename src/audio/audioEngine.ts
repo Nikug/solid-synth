@@ -1,12 +1,6 @@
 import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
-import Osc from "../worklets/Osc.js?url"
-
-export const audioContext = new AudioContext()
-export const outputGain = audioContext.createGain()
-outputGain.connect(audioContext.destination)
-
-audioContext.audioWorklet.addModule(Osc)
+import { audioContext, outputGain } from "./audioContextWrapper"
 
 const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
@@ -56,26 +50,26 @@ const createOscillator = (
   frequency: number,
 ): Oscillator => {
   const volumeAdsr = settings.volumeAdsr
-  const audioGain = audioContext.createGain()
-  audioGain.gain.setValueAtTime(oscillatorSettings.gain, audioContext.currentTime)
+  const audioGain = audioContext().createGain()
+  audioGain.gain.setValueAtTime(oscillatorSettings.gain, audioContext().currentTime)
 
-  const panning = audioContext.createStereoPanner()
+  const panning = audioContext().createStereoPanner()
   panning.pan.value = oscillatorSettings.panning
 
   // ADSR
-  const adsrGain = audioContext.createGain()
+  const adsrGain = audioContext().createGain()
 
-  adsrGain.gain.setValueAtTime(0, audioContext.currentTime)
-  adsrGain.gain.linearRampToValueAtTime(1, audioContext.currentTime + volumeAdsr.attack / 1000)
+  adsrGain.gain.setValueAtTime(0, audioContext().currentTime)
+  adsrGain.gain.linearRampToValueAtTime(1, audioContext().currentTime + volumeAdsr.attack / 1000)
 
   adsrGain.gain.linearRampToValueAtTime(
     1,
-    audioContext.currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
+    audioContext().currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
   )
 
   adsrGain.gain.linearRampToValueAtTime(
     volumeAdsr.sustain,
-    audioContext.currentTime +
+    audioContext().currentTime +
       volumeAdsr.attack / 1000 +
       volumeAdsr.hold / 1000 +
       volumeAdsr.decay / 1000,
@@ -91,9 +85,9 @@ const createOscillator = (
   const oscillators: AudioWorkletNode[] = []
   for (const value of unisonValues) {
     if (oscillatorSettings.waveform === "sine") {
-      const sineOsc = new AudioWorkletNode(audioContext, "Osc")
+      const sineOsc = new AudioWorkletNode(audioContext(), "Osc")
       sineOsc.parameters.get("frequency").value = frequency
-      const unisonPanning = audioContext.createStereoPanner()
+      const unisonPanning = audioContext().createStereoPanner()
       unisonPanning.pan.value = value.panning
       sineOsc.connect(unisonPanning)
       unisonPanning.connect(adsrGain)
@@ -104,7 +98,7 @@ const createOscillator = (
 
   adsrGain.connect(panning)
   panning.connect(audioGain)
-  audioGain.connect(outputGain)
+  audioGain.connect(outputGain())
   return {
     oscillators,
     audioGain,
@@ -117,9 +111,12 @@ const moveToRelease = (oscillator: Oscillator) => {
   releasingOscillators.add(oscillator)
   const removeTime = oscillator.volumeAdsr.release
   const gain = oscillator.adsrGain.gain.value
-  oscillator.adsrGain.gain.cancelScheduledValues(audioContext.currentTime)
-  oscillator.adsrGain.gain.setValueAtTime(gain, audioContext.currentTime)
-  oscillator.adsrGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + removeTime / 1000)
+  oscillator.adsrGain.gain.cancelScheduledValues(audioContext().currentTime)
+  oscillator.adsrGain.gain.setValueAtTime(gain, audioContext().currentTime)
+  oscillator.adsrGain.gain.linearRampToValueAtTime(
+    0,
+    audioContext().currentTime + removeTime / 1000,
+  )
   setTimeout(() => {
     oscillator.oscillators.forEach((osc) => osc.port.postMessage("stop"))
     releasingOscillators.delete(oscillator)
