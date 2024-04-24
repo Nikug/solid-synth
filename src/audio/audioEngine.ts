@@ -2,6 +2,7 @@ import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 import { audioContext, outputGain } from "./audioContextWrapper"
 import { Message, Worklets } from "../worklets/constants"
+import { random } from "../math/random"
 
 const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
@@ -88,6 +89,8 @@ const createOscillator = (
     if (oscillatorSettings.waveform === "sine") {
       const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
       sineOsc.parameters.get("frequency").value = frequency
+      sineOsc.parameters.get("phase").value = random(0, 360)
+      sineOsc.parameters.get("detune").value = value.detune + oscillatorSettings.pitch
       const unisonPanning = audioContext().createStereoPanner()
       unisonPanning.pan.value = value.panning
       sineOsc.connect(unisonPanning)
