@@ -1,4 +1,4 @@
-import Osc from "../worklets/Osc.js?url"
+import Oscillator from "../worklets/Oscillator.js?url"
 
 let _audioContext: AudioContext = null
 let _outputGain: GainNode = null
@@ -26,5 +26,5 @@ const initialize = () => {
 }
 
 const registerWorklets = async () => {
-  await audioContext().audioWorklet.addModule(Osc)
+  await audioContext().audioWorklet.addModule(Oscillator)
 }
