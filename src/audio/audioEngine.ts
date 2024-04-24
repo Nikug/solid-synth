@@ -51,31 +51,13 @@ const createOscillator = (
   settings: Settings,
   frequency: number,
 ): Oscillator => {
-  const volumeAdsr = settings.volumeAdsr
   const audioGain = audioContext().createGain()
   audioGain.gain.setValueAtTime(oscillatorSettings.gain, audioContext().currentTime)
 
   const panning = audioContext().createStereoPanner()
   panning.pan.value = oscillatorSettings.panning
 
-  // ADSR
-  const adsrGain = audioContext().createGain()
-
-  adsrGain.gain.setValueAtTime(0, audioContext().currentTime)
-  adsrGain.gain.linearRampToValueAtTime(1, audioContext().currentTime + volumeAdsr.attack / 1000)
-
-  adsrGain.gain.linearRampToValueAtTime(
-    1,
-    audioContext().currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
-  )
-
-  adsrGain.gain.linearRampToValueAtTime(
-    volumeAdsr.sustain,
-    audioContext().currentTime +
-      volumeAdsr.attack / 1000 +
-      volumeAdsr.hold / 1000 +
-      volumeAdsr.decay / 1000,
-  )
+  const adsrGain = createAdsr(settings.volumeAdsr)
 
   // Unison
   const unisonValues = calculateUnisonDetunes(
@@ -107,8 +89,30 @@ const createOscillator = (
     oscillators,
     audioGain,
     adsrGain,
-    volumeAdsr,
+    volumeAdsr: settings.volumeAdsr,
   }
+}
+
+const createAdsr = (volumeAdsr: Adsr) => {
+  const adsrGain = audioContext().createGain()
+
+  adsrGain.gain.setValueAtTime(0, audioContext().currentTime)
+  adsrGain.gain.linearRampToValueAtTime(1, audioContext().currentTime + volumeAdsr.attack / 1000)
+
+  adsrGain.gain.linearRampToValueAtTime(
+    1,
+    audioContext().currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
+  )
+
+  adsrGain.gain.linearRampToValueAtTime(
+    volumeAdsr.sustain,
+    audioContext().currentTime +
+      volumeAdsr.attack / 1000 +
+      volumeAdsr.hold / 1000 +
+      volumeAdsr.decay / 1000,
+  )
+
+  return adsrGain
 }
 
 const moveToRelease = (oscillator: Oscillator) => {
