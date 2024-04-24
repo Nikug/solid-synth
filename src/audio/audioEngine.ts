@@ -1,6 +1,7 @@
 import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 import { audioContext, outputGain } from "./audioContextWrapper"
+import { Message, Worklets } from "../worklets/constants"
 
 const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
@@ -20,7 +21,7 @@ export const playNote = (frequency: number, settings: Settings) => {
     if (!oscillatorSettings.enabled) continue
 
     const oscillator = createOscillator(oscillatorSettings, settings, frequency)
-    oscillator.oscillators.forEach((osc) => osc.port.postMessage("start"))
+    oscillator.oscillators.forEach((osc) => osc.port.postMessage(Message.start))
     newOscillators.push(oscillator)
   }
   oscillators.set(frequency, newOscillators)
@@ -38,7 +39,7 @@ export const stopAllNotes = () => {
   oscillators.forEach((oscs) => {
     if (oscs && oscs.length > 0) {
       const frequency = oscs[0].oscillators[0].parameters.get("frequency").value
-      oscs.forEach((osc) => osc.oscillators.forEach((osc) => osc.port.postMessage("end")))
+      oscs.forEach((osc) => osc.oscillators.forEach((osc) => osc.port.postMessage(Message.stop)))
       oscillators.delete(frequency)
     }
   })
@@ -85,7 +86,7 @@ const createOscillator = (
   const oscillators: AudioWorkletNode[] = []
   for (const value of unisonValues) {
     if (oscillatorSettings.waveform === "sine") {
-      const sineOsc = new AudioWorkletNode(audioContext(), "Osc")
+      const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
       sineOsc.parameters.get("frequency").value = frequency
       const unisonPanning = audioContext().createStereoPanner()
       unisonPanning.pan.value = value.panning
@@ -118,7 +119,7 @@ const moveToRelease = (oscillator: Oscillator) => {
     audioContext().currentTime + removeTime / 1000,
   )
   setTimeout(() => {
-    oscillator.oscillators.forEach((osc) => osc.port.postMessage("stop"))
+    oscillator.oscillators.forEach((osc) => osc.port.postMessage(Message.stop))
     releasingOscillators.delete(oscillator)
   }, removeTime + 500)
 }

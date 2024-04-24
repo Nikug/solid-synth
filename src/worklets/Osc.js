@@ -1,4 +1,6 @@
-export default class Osc extends AudioWorkletProcessor {
+import { Worklets, Message } from "./constants"
+
+export default class Oscillator extends AudioWorkletProcessor {
   active = null
   d = 0
   previousFrequency = 440
@@ -7,9 +9,9 @@ export default class Osc extends AudioWorkletProcessor {
     super(...args)
 
     this.port.onmessage = (event) => {
-      if (event.data === "start") {
+      if (event.data === Message.start) {
         this.active = true
-      } else if (event.data === "stop") {
+      } else if (event.data === Message.stop) {
         this.active = false
       }
     }
@@ -54,4 +56,4 @@ export default class Osc extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor("Osc", Osc)
+registerProcessor(Worklets.oscillator, Oscillator)

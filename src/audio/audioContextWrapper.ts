@@ -25,6 +25,6 @@ const initialize = () => {
   registerWorklets()
 }
 
-const registerWorklets = () => {
-  audioContext().audioWorklet.addModule(Osc)
+const registerWorklets = async () => {
+  await audioContext().audioWorklet.addModule(Osc)
 }
