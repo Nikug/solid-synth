@@ -1,11 +1,12 @@
 import { Worklets, Message } from "./constants"
 import { degToRad, semitonesToFrequency } from "./math"
+import { calculateWave } from "./waves"
 
 const declickSamples = 32
 
 export default class Oscillator extends AudioWorkletProcessor {
   active = null
-  d = 0
+  pitchDifference = 0
   previousFrequency = 440
   firstRun = true
 
@@ -44,6 +45,13 @@ export default class Oscillator extends AudioWorkletProcessor {
         maxValue: 360,
         automationRate: "a-rate",
       },
+      {
+        name: "wave",
+        defaultValue: 0,
+        minValue: 0,
+        maxValue: 3,
+        automationRate: "a-rate",
+      },
     ]
   }
 
@@ -51,7 +59,7 @@ export default class Oscillator extends AudioWorkletProcessor {
     if (this.active === null) return true
     if (this.active === false) return false
 
-    const { frequency, detune, phase } = parameters
+    const { frequency, detune, phase, wave } = parameters
     const channelLength = outputs[0][0].length
     const values = new Float32Array(channelLength)
 
@@ -60,14 +68,15 @@ export default class Oscillator extends AudioWorkletProcessor {
       const samplePhase = phase.length > 1 ? phase[i] : phase[0]
       const sampleDetune = detune.length > 1 ? detune[i] : detune[0]
       sampleFrequency = semitonesToFrequency(sampleDetune, sampleFrequency)
+      const sampleWave = wave.length > 1 ? wave[i] : wave[0]
 
       const globalTime = currentTime + i / sampleRate
 
-      this.d += globalTime * (this.previousFrequency - sampleFrequency)
+      this.pitchDifference += globalTime * (this.previousFrequency - sampleFrequency)
       this.previousFrequency = sampleFrequency
-      const time = globalTime * sampleFrequency + this.d
+      const t = globalTime * sampleFrequency + this.pitchDifference + degToRad(samplePhase)
 
-      values[i] = Math.sin(2 * Math.PI * time + degToRad(samplePhase))
+      values[i] = calculateWave(t, sampleWave)
     }
 
     // Declick

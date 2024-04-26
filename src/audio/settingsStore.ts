@@ -1,5 +1,6 @@
 import { createStore } from "solid-js/store"
 import { audioContext, outputGain } from "./audioContextWrapper"
+import { Wave } from "../worklets/constants"
 
 const changeSmoothing = 1 / 60
 
@@ -20,7 +21,7 @@ export interface Adsr {
 
 export interface OscillatorSettings {
   enabled: boolean
-  waveform: OscillatorType
+  waveform: (typeof Wave)[keyof typeof Wave]
   gain: number
   pitch: number
   panning: number
@@ -43,7 +44,7 @@ const newSettings = (): Settings => ({
   oscillators: {
     1: {
       enabled: true,
-      waveform: "sine",
+      waveform: Wave.sine,
       gain: 0.5,
       pitch: 0,
       panning: 0,
@@ -54,7 +55,7 @@ const newSettings = (): Settings => ({
     },
     2: {
       enabled: false,
-      waveform: "sine",
+      waveform: Wave.sine,
       gain: 0.5,
       pitch: -12,
       panning: 0,
@@ -65,7 +66,7 @@ const newSettings = (): Settings => ({
     },
     3: {
       enabled: false,
-      waveform: "sine",
+      waveform: Wave.sine,
       gain: 0.5,
       pitch: 12,
       panning: 0,

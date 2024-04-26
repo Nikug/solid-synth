@@ -68,22 +68,21 @@ const createOscillator = (
 
   const oscillators: AudioWorkletNode[] = []
   for (const value of unisonValues) {
-    if (oscillatorSettings.waveform === "sine") {
-      try {
-        const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
+    try {
+      const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
 
-        sineOsc.parameters.get("frequency").value = frequency
-        sineOsc.parameters.get("phase").value = random(0, 360)
-        sineOsc.parameters.get("detune").value = value.detune + oscillatorSettings.pitch
-        const unisonPanning = audioContext().createStereoPanner()
-        unisonPanning.pan.value = value.panning
-        sineOsc.connect(unisonPanning)
-        unisonPanning.connect(adsrGain)
+      sineOsc.parameters.get("frequency").value = frequency
+      sineOsc.parameters.get("phase").value = random(0, 360)
+      sineOsc.parameters.get("detune").value = value.detune + oscillatorSettings.pitch
+      sineOsc.parameters.get("wave").value = oscillatorSettings.waveform
+      const unisonPanning = audioContext().createStereoPanner()
+      unisonPanning.pan.value = value.panning
+      sineOsc.connect(unisonPanning)
+      unisonPanning.connect(adsrGain)
 
-        oscillators.push(sineOsc)
-      } catch (e) {
-        console.log("Worklet not yet loaded")
-      }
+      oscillators.push(sineOsc)
+    } catch (e) {
+      console.log("Worklet not yet loaded")
     }
   }
 

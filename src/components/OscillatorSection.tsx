@@ -5,6 +5,7 @@ import { setSettings, settings } from "../audio/settingsStore"
 import { Knob } from "./Knob"
 import { RiMediaVolumeUpFill } from "solid-icons/ri"
 import { NumberKnob } from "./NumberKnob"
+import { Wave } from "../worklets/constants"
 
 interface Props {
   id: number
@@ -25,26 +26,26 @@ export const OscillatorSection: Component<Props> = (props) => {
       <div class="flex gap-1 mb-2 items-start">
         <div class="grid grid-cols-2 gap-1">
           <ToggleButton
-            selected={settings.oscillators[props.id]?.waveform === "sine"}
-            onChange={() => setSettings("oscillators", props.id, "waveform", "sine")}
+            selected={settings.oscillators[props.id]?.waveform === Wave.sine}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.sine)}
           >
             <TbWaveSine size={24} />
           </ToggleButton>
           <ToggleButton
-            selected={settings.oscillators[props.id]?.waveform === "triangle"}
-            onChange={() => setSettings("oscillators", props.id, "waveform", "triangle")}
+            selected={settings.oscillators[props.id]?.waveform === Wave.triangle}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.triangle)}
           >
             <TbTriangle size={24} />
           </ToggleButton>
           <ToggleButton
-            selected={settings.oscillators[props.id]?.waveform === "sawtooth"}
-            onChange={() => setSettings("oscillators", props.id, "waveform", "sawtooth")}
+            selected={settings.oscillators[props.id]?.waveform === Wave.sawtooth}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.sawtooth)}
           >
             <TbWaveSawTool size={24} />
           </ToggleButton>
           <ToggleButton
-            selected={settings.oscillators[props.id]?.waveform === "square"}
-            onChange={() => setSettings("oscillators", props.id, "waveform", "square")}
+            selected={settings.oscillators[props.id]?.waveform === Wave.square}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.square)}
           >
             <TbWaveSquare size={24} />
           </ToggleButton>
