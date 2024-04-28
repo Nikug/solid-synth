@@ -74,7 +74,8 @@ export default class Oscillator extends AudioWorkletProcessor {
 
       this.pitchDifference += globalTime * (this.previousFrequency - sampleFrequency)
       this.previousFrequency = sampleFrequency
-      const t = globalTime * sampleFrequency + this.pitchDifference + degToRad(samplePhase)
+      const t =
+        (globalTime * sampleFrequency + this.pitchDifference) * 2 * Math.PI + degToRad(samplePhase)
 
       values[i] = calculateWave(t, sampleWave)
     }
