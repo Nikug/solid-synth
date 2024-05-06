@@ -78,7 +78,7 @@ export default class Oscillator extends AudioWorkletProcessor {
       this.previousFrequency = sampleFrequency
       const t = globalTime * sampleFrequency + this.pitchOffset + degToRad(samplePhase)
 
-      values[i] = calculateWave(sampleWave, this.cache, t, sampleFrequency)
+      values[i] = calculateWave(sampleWave, this.cache, t)
     }
 
     // Declick
@@ -99,7 +99,7 @@ export default class Oscillator extends AudioWorkletProcessor {
   }
 }
 
-const calculateWave = (wave, cache, t, frequency) => {
+const calculateWave = (wave, cache, t) => {
   let sample = cache[wave].sampled
   const position = ((Math.sin(t) + 1) / 2) * sampleResolution
   const previous = Math.floor(position)

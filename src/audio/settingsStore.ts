@@ -5,6 +5,7 @@ import { Wave } from "../worklets/constants"
 const changeSmoothing = 1 / 60
 
 export interface Settings {
+  active: boolean
   isKnobActive: boolean
   volume: number
   volumeAdsr: Adsr
@@ -32,6 +33,7 @@ export interface OscillatorSettings {
 }
 
 const newSettings = (): Settings => ({
+  active: false,
   isKnobActive: false,
   volume: 0.5,
   volumeAdsr: {

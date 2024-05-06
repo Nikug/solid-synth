@@ -1,4 +1,4 @@
-import { Component, For } from "solid-js"
+import { Component, For, Show } from "solid-js"
 import { Keymap, Note, Octave } from "../constants"
 import { PianoKey } from "./PianoKey"
 import { noteBuffer, setOctave } from "../audio/noteStore"
@@ -7,6 +7,7 @@ import { Knob } from "./Knob"
 import { settings, setGlobalVolume } from "../audio/settingsStore"
 import { AdsrSection } from "./AdsrSection"
 import { OscillatorSection } from "./OscillatorSection"
+import { Oscilloscope } from "./Oscilloscope"
 
 interface Key {
   note: Note
@@ -45,6 +46,9 @@ export const Piano: Component = () => {
         <OscillatorSection id={2} />
         <OscillatorSection id={3} />
         <AdsrSection label="Volume" settingKey="volumeAdsr" />
+        <Show when={settings.active}>
+          <Oscilloscope />
+        </Show>
       </div>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">
