@@ -28,7 +28,7 @@ export const Oscilloscope: Component = () => {
           continue
         }
 
-        const y = (v * canvas.height) / 2
+        const y = ((v + 1) / 2) * canvas.height
         if (i === 0) {
           context.moveTo(x, y)
         } else {
@@ -37,7 +37,6 @@ export const Oscilloscope: Component = () => {
         x += sliceWidth
       }
 
-      context.lineTo(canvas.width, canvas.height / 2)
       context.stroke()
 
       frame = requestAnimationFrame(loop)

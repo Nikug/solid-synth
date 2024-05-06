@@ -6,7 +6,7 @@ export const Wave = {
 } as const
 
 const resolution = 2048
-const sampleResolution = 256
+const sampleResolution = 1024
 
 export interface CachedWave {
   real: Float32Array
@@ -40,15 +40,13 @@ export const initializeWaves = (): WaveCache => {
     sampled: sampleWave(sineReal, sineImag),
   }
 
-  // console.log(cache)
-
   return cache as WaveCache
 }
 
 const sampleWave = (real: Float32Array, imag: Float32Array): Float32Array => {
   const sampled = new Float32Array(sampleResolution)
   for (let i = 0; i < sampleResolution; ++i) {
-    const phase = (i / sampleResolution) * Math.PI * 2
+    const phase = (i / sampleResolution) * Math.PI * 2 + Math.PI / 2
     sampled[i] = inverseFFT(real, imag, phase)
   }
 

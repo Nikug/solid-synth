@@ -41,7 +41,7 @@ const initialize = () => {
   _outputGain = _audioContext.createGain()
 
   _analyserNode = _audioContext.createAnalyser()
-  _analyserNode.fftSize = 2048
+  _analyserNode.fftSize = 1024
 
   _outputGain.connect(_analyserNode)
   _analyserNode.connect(_audioContext.destination)
