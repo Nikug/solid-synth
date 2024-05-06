@@ -5,6 +5,7 @@ export const Worklets = {
 export const Message = {
   start: 0,
   stop: 1,
+  waveCache: 2,
 }
 
 export const Wave = {
@@ -13,3 +14,5 @@ export const Wave = {
   sawtooth: 2,
   triangle: 3,
 }
+
+export const sampleResolution = 1024

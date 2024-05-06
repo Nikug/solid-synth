@@ -1,6 +1,6 @@
 import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
-import { audioContext, outputGain } from "./audioContextWrapper"
+import { audioContext, outputGain, waveCache } from "./audioContextWrapper"
 import { Message, Worklets } from "../worklets/constants"
 import { random } from "../math/random"
 
@@ -22,7 +22,10 @@ export const playNote = (frequency: number, settings: Settings) => {
     if (!oscillatorSettings.enabled) continue
 
     const oscillator = createOscillator(oscillatorSettings, settings, frequency)
-    oscillator.oscillators.forEach((osc) => osc.port.postMessage(Message.start))
+    oscillator.oscillators.forEach((osc) => {
+      osc.port.postMessage({ id: Message.waveCache, cache: waveCache() })
+      osc.port.postMessage({ id: Message.start })
+    })
     newOscillators.push(oscillator)
   }
   oscillators.set(frequency, newOscillators)
@@ -40,7 +43,9 @@ export const stopAllNotes = () => {
   oscillators.forEach((oscs) => {
     if (oscs && oscs.length > 0) {
       const frequency = oscs[0].oscillators[0].parameters.get("frequency").value
-      oscs.forEach((osc) => osc.oscillators.forEach((osc) => osc.port.postMessage(Message.stop)))
+      oscs.forEach((osc) =>
+        osc.oscillators.forEach((osc) => osc.port.postMessage({ id: Message.stop })),
+      )
       oscillators.delete(frequency)
     }
   })
@@ -130,7 +135,7 @@ const moveToRelease = (oscillator: Oscillator) => {
     audioContext().currentTime + removeTime / 1000,
   )
   setTimeout(() => {
-    oscillator.oscillators.forEach((osc) => osc.port.postMessage(Message.stop))
+    oscillator.oscillators.forEach((osc) => osc.port.postMessage({ id: Message.stop }))
     releasingOscillators.delete(oscillator)
   }, removeTime + 500)
 }

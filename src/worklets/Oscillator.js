@@ -1,23 +1,25 @@
-import { Worklets, Message } from "./constants"
+import { Worklets, Message, sampleResolution } from "./constants"
 import { degToRad, semitonesToFrequency } from "./math"
-import { calculateWave } from "./waves"
 
 const declickSamples = 32
 
 export default class Oscillator extends AudioWorkletProcessor {
   active = null
-  pitchDifference = 0
+  pitchOffset = 0
   previousFrequency = 440
   firstRun = true
+  cache = null
 
   constructor(...args) {
     super(...args)
 
     this.port.onmessage = (event) => {
-      if (event.data === Message.start) {
+      if (event.data.id === Message.start) {
         this.active = true
-      } else if (event.data === Message.stop) {
+      } else if (event.data.id === Message.stop) {
         this.active = false
+      } else if (event.data.id === Message.waveCache) {
+        this.cache = event.data.cache
       }
     }
   }
@@ -72,12 +74,11 @@ export default class Oscillator extends AudioWorkletProcessor {
 
       const globalTime = currentTime + i / sampleRate
 
-      this.pitchDifference += globalTime * (this.previousFrequency - sampleFrequency)
+      this.pitchOffset += globalTime * (this.previousFrequency - sampleFrequency)
       this.previousFrequency = sampleFrequency
-      const t =
-        (globalTime * sampleFrequency + this.pitchDifference) * 2 * Math.PI + degToRad(samplePhase)
+      const t = globalTime * sampleFrequency + this.pitchOffset + degToRad(samplePhase)
 
-      values[i] = calculateWave(t, sampleWave)
+      values[i] = calculateWave(sampleWave, this.cache, t, sampleFrequency)
     }
 
     // Declick
@@ -96,6 +97,16 @@ export default class Oscillator extends AudioWorkletProcessor {
     this.firstRun = false
     return true
   }
+}
+
+const calculateWave = (wave, cache, t, frequency) => {
+  let sample = cache[wave].sampled
+  const position = ((Math.sin(t) + 1) / 2) * sampleResolution
+  const previous = Math.floor(position)
+  const next = Math.ceil(position)
+
+  // Linearly interpolate between samples
+  return (sample[previous] + sample[next]) / 2
 }
 
 registerProcessor(Worklets.oscillator, Oscillator)
