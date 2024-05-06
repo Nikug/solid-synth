@@ -79,7 +79,7 @@ export default class Oscillator extends AudioWorkletProcessor {
       const t = globalTime * sampleFrequency + this.pitchOffset + degToRad(samplePhase)
 
       const nextValue = calculateWave(sampleWave, this.cache, t)
-      console.log(nextValue.toFixed(3))
+      // console.log(nextValue.toFixed(3))
 
       values[i] = nextValue
     }
