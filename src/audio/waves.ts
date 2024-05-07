@@ -5,12 +5,10 @@ export const Wave = {
   triangle: 3,
 } as const
 
-const resolution = 2048
+const resolution = 1024
 const sampleResolution = 1024
 
 export interface CachedWave {
-  real: Float32Array
-  imag: Float32Array
   sampled: Float32Array
 }
 
@@ -20,23 +18,24 @@ export const initializeWaves = (): WaveCache => {
   const cache: Partial<WaveCache> = {}
 
   // Saw
-  const sawReal = new Float32Array(resolution)
-  const sawImag = new Float32Array(resolution)
-  for (let i = 1; i <= resolution; ++i) {
-    const piFactor = 2 / (i * Math.PI)
-    const point = piFactor * (i & 1 ? 1 : -1)
-    sawReal[i - 1] = -point * Math.sin(i)
-    sawImag[i - 1] = point * Math.cos(i)
+  const sawSample = new Float32Array(sampleResolution)
+  for (let i = 1; i <= sampleResolution; ++i) {
+    let sum = 0
+    for (let j = 1; j <= resolution; ++j) {
+      sum += (-1) ** j * (Math.sin((2 * Math.PI * j * i) / sampleResolution) / j)
+    }
+
+    sawSample[i - 1] = 1 / 2 - (1 / Math.PI) * sum
   }
 
-  cache[Wave.sawtooth] = { real: sawReal, imag: sawImag, sampled: sampleWave(sawReal, sawImag) }
+  cache[Wave.sawtooth] = { sampled: sawSample }
+
+  console.log(cache[Wave.sawtooth].sampled)
 
   // Sine
   const sineReal = new Float32Array([0, 1])
   const sineImag = new Float32Array([0, 0])
   cache[Wave.sine] = {
-    real: sineReal,
-    imag: sineImag,
     sampled: sampleWave(sineReal, sineImag),
   }
 

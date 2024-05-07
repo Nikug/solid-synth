@@ -1,6 +1,6 @@
 import { Component, Show, onCleanup, onMount } from "solid-js"
 import { analyserNode } from "../audio/audioContextWrapper"
-import * as colors from "tailwindcss/colors"
+import { gray } from "tailwindcss/colors"
 import { settings } from "../audio/settingsStore"
 
 export const Oscilloscope: Component = () => {
@@ -22,7 +22,7 @@ const OscilloscopeInner: Component = () => {
     const data = new Float32Array(bufferLength)
     let context = canvas.getContext("2d")
     context.lineWidth = 2
-    context.strokeStyle = colors.gray[700]
+    context.strokeStyle = gray[700]
 
     const loop = (_time: number) => {
       analyserNode().getFloatTimeDomainData(data)
