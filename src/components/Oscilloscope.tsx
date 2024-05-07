@@ -1,7 +1,19 @@
-import { Component, onCleanup, onMount } from "solid-js"
+import { Component, Show, onCleanup, onMount } from "solid-js"
 import { analyserNode } from "../audio/audioContextWrapper"
+import * as colors from "tailwindcss/colors"
+import { settings } from "../audio/settingsStore"
 
 export const Oscilloscope: Component = () => {
+  return (
+    <div class="w-48 h-16 border rounded-lg p-1">
+      <Show when={settings.active}>
+        <OscilloscopeInner />
+      </Show>
+    </div>
+  )
+}
+
+export const OscilloscopeInner: Component = () => {
   let canvas: HTMLCanvasElement
   let frame = null
 
@@ -10,7 +22,7 @@ export const Oscilloscope: Component = () => {
     const data = new Float32Array(bufferLength)
     let context = canvas.getContext("2d")
     context.lineWidth = 2
-    context.strokeStyle = "black"
+    context.strokeStyle = colors.gray[700]
 
     const loop = (_time: number) => {
       analyserNode().getFloatTimeDomainData(data)
@@ -49,9 +61,5 @@ export const Oscilloscope: Component = () => {
     cancelAnimationFrame(frame)
   })
 
-  return (
-    <div>
-      <canvas class="bg-white" ref={canvas} id="oscilloscope"></canvas>
-    </div>
-  )
+  return <canvas class="bg-transparent w-full h-full" ref={canvas} id="oscilloscope"></canvas>
 }
