@@ -1,5 +1,5 @@
 import { Worklets, Message } from "./constants"
-import { degToRad, semitonesToFrequency } from "./math"
+import { degToRad, semitonesToFrequency, clamp } from "./math"
 
 const declickSamples = 32
 
@@ -79,7 +79,6 @@ export default class Oscillator extends AudioWorkletProcessor {
       const t = globalTime * sampleFrequency + this.pitchOffset + degToRad(samplePhase)
 
       const nextValue = calculateWave(sampleWave, this.cache, t)
-      // console.log(nextValue.toFixed(3))
 
       values[i] = nextValue
     }
@@ -105,17 +104,10 @@ export default class Oscillator extends AudioWorkletProcessor {
 const calculateWave = (wave, cache, t) => {
   let sample = cache[wave].sampled
 
-  const position = ((Math.sin(t * 2 * Math.PI) + 1) / 2) * sample.length
+  const position = t * sample.length
 
-  let previous = Math.floor(position)
-  if (previous < 0) {
-    previous = sample.length - 1
-  }
-
-  let next = Math.ceil(position)
-  if (next > sample.length - 1) {
-    next = 0
-  }
+  let previous = clamp(Math.floor(position) % sample.length, 0, sample.length - 1)
+  let next = clamp(Math.ceil(position) % sample.length, 0, sample.length - 1)
 
   // Linearly interpolate between samples
   return (sample[previous] + sample[next]) / 2
