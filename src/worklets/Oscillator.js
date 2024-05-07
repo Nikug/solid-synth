@@ -72,15 +72,16 @@ export default class Oscillator extends AudioWorkletProcessor {
       sampleFrequency = semitonesToFrequency(sampleDetune, sampleFrequency)
       const sampleWave = wave.length > 1 ? wave[i] : wave[0]
 
-      const globalTime = currentTime + i / sampleRate
+      const sampleTime = currentTime + i / sampleRate
 
-      this.pitchOffset += globalTime * (this.previousFrequency - sampleFrequency)
+      this.pitchOffset += sampleTime * (this.previousFrequency - sampleFrequency)
       this.previousFrequency = sampleFrequency
-      const t = globalTime * sampleFrequency + this.pitchOffset + degToRad(samplePhase)
+      const t = sampleTime * sampleFrequency + this.pitchOffset
 
-      const nextValue = calculateWave(sampleWave, this.cache, t)
+      const nextValue = calculateWave(sampleWave, this.cache, t, samplePhase)
 
       values[i] = nextValue
+      // console.log(t, nextValue)
     }
 
     // Declick
@@ -88,6 +89,7 @@ export default class Oscillator extends AudioWorkletProcessor {
       for (let i = 0; i < declickSamples; ++i) {
         values[i] = values[i] * (i / declickSamples)
       }
+      this.firstRun = false
     }
 
     for (const output of outputs) {
@@ -96,17 +98,17 @@ export default class Oscillator extends AudioWorkletProcessor {
       }
     }
 
-    this.firstRun = false
     return true
   }
 }
 
-const calculateWave = (wave, cache, t) => {
+const calculateWave = (wave, cache, t, phase) => {
   let sample = cache[wave].sampled
 
   const position = t * sample.length
+  const phaseOffset = (phase / 360) * sample.length
 
-  const previous = Math.floor(position) % sample.length
+  const previous = Math.floor(position + phaseOffset) % sample.length
   const next = loop(previous + 1, 0, sample.length - 1)
 
   // Linearly interpolate between samples

@@ -77,7 +77,7 @@ const createOscillator = (
       const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
 
       sineOsc.parameters.get("frequency").value = frequency
-      sineOsc.parameters.get("phase").value = random(0, 360)
+      sineOsc.parameters.get("phase").value = oscillatorSettings.phase + value.phase
       sineOsc.parameters.get("detune").value = value.detune + oscillatorSettings.pitch
       sineOsc.parameters.get("wave").value = oscillatorSettings.waveform
       const unisonPanning = audioContext().createStereoPanner()
