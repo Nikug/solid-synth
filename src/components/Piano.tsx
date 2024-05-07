@@ -8,6 +8,7 @@ import { settings, setGlobalVolume } from "../audio/settingsStore"
 import { AdsrSection } from "./AdsrSection"
 import { OscillatorSection } from "./OscillatorSection"
 import { Oscilloscope } from "./Oscilloscope"
+import { SpectralAnalyser } from "./SpectralAnalyser"
 
 interface Key {
   note: Note
@@ -44,6 +45,7 @@ export const Piano: Component = () => {
         />
 
         <Oscilloscope />
+        <SpectralAnalyser />
       </div>
       <div class="w-full flex justify-start items-center gap-4 mb-4 flex-wrap">
         <OscillatorSection id={1} />

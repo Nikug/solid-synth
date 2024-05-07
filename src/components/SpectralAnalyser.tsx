@@ -2,18 +2,19 @@ import { Component, Show, onCleanup, onMount } from "solid-js"
 import { analyserNode } from "../audio/audioContextWrapper"
 import * as colors from "tailwindcss/colors"
 import { settings } from "../audio/settingsStore"
+import { clamp } from "../worklets/math"
 
-export const Oscilloscope: Component = () => {
+export const SpectralAnalyser: Component = () => {
   return (
     <div class="w-48 h-16 border rounded-lg p-1">
       <Show when={settings.active}>
-        <OscilloscopeInner />
+        <SpectralAnalyserInner />
       </Show>
     </div>
   )
 }
 
-const OscilloscopeInner: Component = () => {
+const SpectralAnalyserInner: Component = () => {
   let canvas: HTMLCanvasElement
   let frame = null
 
@@ -25,13 +26,10 @@ const OscilloscopeInner: Component = () => {
     context.strokeStyle = colors.gray[700]
 
     const loop = (_time: number) => {
-      analyserNode().getFloatTimeDomainData(data)
+      analyserNode().getFloatFrequencyData(data)
 
       context.clearRect(0, 0, canvas.width, canvas.height)
       context.beginPath()
-
-      const sliceWidth = canvas.width / bufferLength
-      let x = 0
 
       for (let i = 0; i < bufferLength; i++) {
         const v = data[i]
@@ -40,13 +38,13 @@ const OscilloscopeInner: Component = () => {
           continue
         }
 
-        const y = ((v + 1) / 2) * canvas.height
+        const y = clamp((-v / 140) * canvas.height, 0, canvas.height - 1)
+        const x = Math.pow(i / bufferLength, 1 / 2) * canvas.width
         if (i === 0) {
           context.moveTo(x, y)
         } else {
           context.lineTo(x, y)
         }
-        x += sliceWidth
       }
 
       context.stroke()
@@ -61,5 +59,5 @@ const OscilloscopeInner: Component = () => {
     cancelAnimationFrame(frame)
   })
 
-  return <canvas class="bg-transparent w-full h-full" ref={canvas} id="oscilloscope"></canvas>
+  return <canvas class="bg-transparent w-full h-full" ref={canvas} id="spectral-analyser"></canvas>
 }
