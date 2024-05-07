@@ -1,5 +1,5 @@
 import { Worklets, Message } from "./constants"
-import { degToRad, semitonesToFrequency, clamp } from "./math"
+import { degToRad, semitonesToFrequency, loop } from "./math"
 
 const declickSamples = 32
 
@@ -106,8 +106,8 @@ const calculateWave = (wave, cache, t) => {
 
   const position = t * sample.length
 
-  let previous = clamp(Math.floor(position) % sample.length, 0, sample.length - 1)
-  let next = clamp(Math.ceil(position) % sample.length, 0, sample.length - 1)
+  const previous = Math.floor(position) % sample.length
+  const next = loop(previous + 1, 0, sample.length - 1)
 
   // Linearly interpolate between samples
   return (sample[previous] + sample[next]) / 2

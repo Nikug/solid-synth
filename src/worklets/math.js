@@ -11,3 +11,9 @@ export const clamp = (value, min, max) => {
   if (value > max) return max
   return value
 }
+
+export const loop = (value, min, max) => {
+  if (value < min) return max
+  if (value > max) return min
+  return value
+}
