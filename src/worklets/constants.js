@@ -13,6 +13,8 @@ export const Wave = {
   square: 1,
   sawtooth: 2,
   triangle: 3,
+  pulse: 4,
+  fatSine: 5,
 }
 
 export const sampleResolution = 1024

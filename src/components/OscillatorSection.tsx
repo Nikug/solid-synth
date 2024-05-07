@@ -49,6 +49,18 @@ export const OscillatorSection: Component<Props> = (props) => {
           >
             <TbWaveSquare size={24} />
           </ToggleButton>
+          <ToggleButton
+            selected={settings.oscillators[props.id]?.waveform === Wave.pulse}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.pulse)}
+          >
+            <TbWaveSquare size={24} />
+          </ToggleButton>
+          <ToggleButton
+            selected={settings.oscillators[props.id]?.waveform === Wave.fatSine}
+            onChange={() => setSettings("oscillators", props.id, "waveform", Wave.fatSine)}
+          >
+            <TbWaveSquare size={24} />
+          </ToggleButton>
         </div>
         <div class="grid grid-cols-3">
           <Knob
