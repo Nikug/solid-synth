@@ -47,11 +47,13 @@ export const Piano: Component = () => {
         <Oscilloscope />
         <SpectralAnalyser />
       </div>
+      <div class="flex gap-4 items-center mb-4">
+        <AdsrSection label="Volume" settingKey="volumeAdsr" />
+      </div>
       <div class="w-full flex justify-start items-center gap-4 mb-4 flex-wrap">
         <OscillatorSection id={1} />
         <OscillatorSection id={2} />
         <OscillatorSection id={3} />
-        <AdsrSection label="Volume" settingKey="volumeAdsr" />
       </div>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">
