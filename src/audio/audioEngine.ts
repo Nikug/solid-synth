@@ -75,14 +75,19 @@ const createOscillator = (
   for (const value of unisonValues) {
     try {
       const sineOsc = new AudioWorkletNode(audioContext(), Worklets.oscillator)
+      const unisonGain = audioContext().createGain()
+      const unisonPanning = audioContext().createStereoPanner()
 
       sineOsc.parameters.get("frequency").value = frequency
       sineOsc.parameters.get("phase").value = oscillatorSettings.phase + value.phase
       sineOsc.parameters.get("detune").value = value.detune + oscillatorSettings.pitch
       sineOsc.parameters.get("wave").value = oscillatorSettings.waveform
-      const unisonPanning = audioContext().createStereoPanner()
+
+      unisonGain.gain.value = value.volume
       unisonPanning.pan.value = value.panning
-      sineOsc.connect(unisonPanning)
+
+      sineOsc.connect(unisonGain)
+      unisonGain.connect(unisonPanning)
       unisonPanning.connect(adsrGain)
 
       oscillators.push(sineOsc)

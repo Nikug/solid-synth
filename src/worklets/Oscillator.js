@@ -81,7 +81,6 @@ export default class Oscillator extends AudioWorkletProcessor {
       const nextValue = calculateWave(sampleWave, this.cache, t, samplePhase)
 
       values[i] = nextValue
-      // console.log(t, nextValue)
     }
 
     // Declick

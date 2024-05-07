@@ -40,10 +40,15 @@ const initialize = () => {
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()
 
+  const lowpass = _audioContext.createBiquadFilter()
+  lowpass.type = "lowpass"
+  lowpass.frequency.value = _audioContext.sampleRate / 2
+
   _analyserNode = _audioContext.createAnalyser()
   _analyserNode.fftSize = 1024
 
-  _outputGain.connect(_analyserNode)
+  _outputGain.connect(lowpass)
+  lowpass.connect(_analyserNode)
   _analyserNode.connect(_audioContext.destination)
   registerWorklets()
   _waveCache = initializeWaves()
