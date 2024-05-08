@@ -12,7 +12,7 @@ export const ToggleButton: Component<Props> = (props) => {
     <div
       class={clsx(
         props.selected ? "bg-blue-500 text-white" : "bg-gray-200",
-        "border rounded h-6 flex items-center justify-center cursor-pointer text-xs",
+        "border rounded h-6 flex items-center justify-center cursor-pointer text-xs px-1",
       )}
       onClick={() => props.onChange(!props.selected)}
     >

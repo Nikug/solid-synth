@@ -9,7 +9,17 @@ export interface Settings {
   isKnobActive: boolean
   volume: number
   volumeAdsr: Adsr
+  filterAdsr: Adsr
+  filter: Filter
   oscillators: Record<number, OscillatorSettings>
+}
+
+export interface Filter {
+  enabled: boolean
+  type: BiquadFilterType
+  value: number
+  amount: number
+  resonance: number
 }
 
 export interface Adsr {
@@ -42,6 +52,20 @@ const newSettings = (): Settings => ({
     decay: 500,
     sustain: 0.2,
     release: 300,
+  },
+  filter: {
+    enabled: false,
+    type: "lowpass",
+    value: 0,
+    amount: 1,
+    resonance: 0,
+  },
+  filterAdsr: {
+    attack: 0,
+    hold: 1000,
+    decay: 0,
+    sustain: 1,
+    release: 0,
   },
   oscillators: {
     1: {

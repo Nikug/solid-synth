@@ -9,6 +9,7 @@ import { AdsrSection } from "./AdsrSection"
 import { OscillatorSection } from "./OscillatorSection"
 import { Oscilloscope } from "./Oscilloscope"
 import { SpectralAnalyser } from "./SpectralAnalyser"
+import { FilterSection } from "./FilterSection"
 
 interface Key {
   note: Note
@@ -48,7 +49,10 @@ export const Piano: Component = () => {
         <SpectralAnalyser />
       </div>
       <div class="flex gap-4 items-center mb-4">
-        <AdsrSection label="Volume" settingKey="volumeAdsr" />
+        <div class="border rounded-lg p-4">
+          <AdsrSection label="Volume" settingKey="volumeAdsr" />
+        </div>
+        <FilterSection />
       </div>
       <div class="w-full flex justify-start items-center gap-4 mb-4 flex-wrap">
         <OscillatorSection id={1} />
