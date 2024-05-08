@@ -1,3 +1,5 @@
+import { random } from "./random"
+
 interface UnisonValues {
   detune: number
   panning: number
@@ -18,13 +20,12 @@ export const calculateUnisonDetunes = (
   const values: UnisonValues[] = []
   const step = unisonDetune / (unisonVoices - 1)
   const panStep = (unisonWidth * 2) / (unisonVoices - 1)
-  const phaseStep = 360 / (unisonVoices - 1)
   const volume = unisonVoices === 2 ? 0.5 : 1 / (unisonVoices / 2)
   for (let i = 0; i < unisonVoices; i++) {
     const alternatingIndex = i % 2 === 0 ? Math.floor(i / 2) : Math.ceil(unisonVoices - 1 - i / 2)
     const detune = alternatingIndex * step + min
     const panning = alternatingIndex * panStep + minPan
-    const phase = alternatingIndex * phaseStep
+    const phase = random(0, 360)
     values.push({ detune, panning, phase, volume })
   }
 
