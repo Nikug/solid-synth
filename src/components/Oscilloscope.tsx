@@ -18,11 +18,14 @@ const OscilloscopeInner: Component = () => {
   let frame = null
 
   onMount(() => {
+    canvas.width = canvas.offsetWidth * 2
+    canvas.height = canvas.offsetHeight * 2
+
     const bufferLength = analyserNode().frequencyBinCount
     const data = new Float32Array(bufferLength)
     let context = canvas.getContext("2d")
-    context.lineWidth = 2
-    context.strokeStyle = gray[700]
+    context.lineWidth = 4
+    context.strokeStyle = gray[600]
 
     const loop = (_time: number) => {
       analyserNode().getFloatTimeDomainData(data)

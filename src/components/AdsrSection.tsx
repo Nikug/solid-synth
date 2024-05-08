@@ -3,6 +3,7 @@ import { Knob } from "./Knob"
 import { Adsr, Settings, setSettings, settings } from "../audio/settingsStore"
 import { Part } from "solid-js/store"
 import { KeyOfType } from "../types"
+import { AdsrVisualiser } from "./AdsrVisualiser"
 
 interface Props {
   label: string
@@ -15,6 +16,7 @@ export const AdsrSection: Component<Props> = (props) => {
   return (
     <div class="border rounded-lg p-4">
       <h3 class="mb-2">{props.label}</h3>
+      <AdsrVisualiser adsr={settings[props.settingKey as string]} id={props.settingKey as string} />
       <div class="flex">
         <Knob
           label="Attack"
