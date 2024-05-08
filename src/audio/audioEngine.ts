@@ -2,7 +2,7 @@ import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
 import { audioContext, outputGain, waveCache } from "./audioContextWrapper"
 import { Message, Worklets } from "../worklets/constants"
-import { random } from "../math/random"
+import { createFilterAdsr, createVolumeAdsr } from "./settingsUtils"
 
 const oscillators: Map<number, Oscillator[]> = new Map()
 const releasingOscillators: Set<Oscillator> = new Set()
@@ -11,7 +11,10 @@ interface Oscillator {
   oscillators: AudioWorkletNode[]
   audioGain: GainNode
   adsrGain: GainNode
+  adsrFilter: BiquadFilterNode | undefined
+  filterMin: number
   volumeAdsr: Adsr
+  filterAdsr: Adsr
 }
 
 export const playNote = (frequency: number, settings: Settings) => {
@@ -62,7 +65,16 @@ const createOscillator = (
   const panning = audioContext().createStereoPanner()
   panning.pan.value = oscillatorSettings.panning
 
-  const adsrGain = createAdsr(settings.volumeAdsr)
+  const adsrGain = createVolumeAdsr(audioContext(), settings.volumeAdsr)
+  let adsrFilter = undefined
+
+  if (settings.filter.enabled) {
+    adsrFilter = createFilterAdsr(audioContext(), settings.filter, settings.filterAdsr)
+    adsrGain.connect(adsrFilter)
+    adsrFilter.connect(panning)
+  } else {
+    adsrGain.connect(panning)
+  }
 
   // Unison
   const unisonValues = calculateUnisonDetunes(
@@ -96,49 +108,40 @@ const createOscillator = (
     }
   }
 
-  adsrGain.connect(panning)
   panning.connect(audioGain)
   audioGain.connect(outputGain())
   return {
     oscillators,
     audioGain,
     adsrGain,
+    adsrFilter,
+    filterMin: settings.filter.value,
     volumeAdsr: settings.volumeAdsr,
+    filterAdsr: settings.filterAdsr,
   }
-}
-
-const createAdsr = (volumeAdsr: Adsr) => {
-  const adsrGain = audioContext().createGain()
-
-  adsrGain.gain.setValueAtTime(0, audioContext().currentTime)
-  adsrGain.gain.linearRampToValueAtTime(1, audioContext().currentTime + volumeAdsr.attack / 1000)
-
-  adsrGain.gain.linearRampToValueAtTime(
-    1,
-    audioContext().currentTime + volumeAdsr.attack / 1000 + volumeAdsr.hold / 1000,
-  )
-
-  adsrGain.gain.linearRampToValueAtTime(
-    volumeAdsr.sustain,
-    audioContext().currentTime +
-      volumeAdsr.attack / 1000 +
-      volumeAdsr.hold / 1000 +
-      volumeAdsr.decay / 1000,
-  )
-
-  return adsrGain
 }
 
 const moveToRelease = (oscillator: Oscillator) => {
   releasingOscillators.add(oscillator)
-  const removeTime = oscillator.volumeAdsr.release
+  const removeTime = Math.max(oscillator.volumeAdsr.release, oscillator.filterAdsr.release)
   const gain = oscillator.adsrGain.gain.value
   oscillator.adsrGain.gain.cancelScheduledValues(audioContext().currentTime)
   oscillator.adsrGain.gain.setValueAtTime(gain, audioContext().currentTime)
   oscillator.adsrGain.gain.linearRampToValueAtTime(
     0,
-    audioContext().currentTime + removeTime / 1000,
+    audioContext().currentTime + oscillator.volumeAdsr.release / 1000,
   )
+
+  if (oscillator.adsrFilter) {
+    const frequency = oscillator.adsrFilter.frequency.value
+    oscillator.adsrFilter.frequency.cancelScheduledValues(audioContext().currentTime)
+    oscillator.adsrFilter.frequency.setValueAtTime(frequency, audioContext().currentTime)
+    oscillator.adsrFilter.frequency.linearRampToValueAtTime(
+      oscillator.filterMin,
+      audioContext().currentTime + oscillator.filterAdsr.release / 1000,
+    )
+  }
+
   setTimeout(() => {
     oscillator.oscillators.forEach((osc) => osc.port.postMessage({ id: Message.stop }))
     releasingOscillators.delete(oscillator)

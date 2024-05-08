@@ -6,6 +6,8 @@ let _audioContext: AudioContext = null
 let _outputGain: GainNode = null
 let _analyserNode: AnalyserNode = null
 let _waveCache: WaveCache = null
+let _filterNode: BiquadFilterNode = null
+let _lowpass: BiquadFilterNode = null
 
 export const audioContext = () => {
   if (!_audioContext) {
@@ -36,19 +38,34 @@ export const analyserNode = () => {
   return _analyserNode
 }
 
+export const lowpass = () => {
+  if (!_lowpass) {
+    return null
+  }
+  return _lowpass
+}
+
+export const filterNode = () => {
+  if (!_filterNode) {
+    return null
+  }
+  return _filterNode
+}
+
 const initialize = () => {
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()
+  _filterNode = _audioContext.createBiquadFilter()
 
-  const lowpass = _audioContext.createBiquadFilter()
-  lowpass.type = "lowpass"
-  lowpass.frequency.value = _audioContext.sampleRate / 2
+  _lowpass = _audioContext.createBiquadFilter()
+  _lowpass.type = "lowpass"
+  _lowpass.frequency.value = _audioContext.sampleRate / 2
 
   _analyserNode = _audioContext.createAnalyser()
   _analyserNode.fftSize = 1024
 
-  _outputGain.connect(lowpass)
-  lowpass.connect(_analyserNode)
+  _outputGain.connect(_lowpass)
+  _lowpass.connect(_analyserNode)
   _analyserNode.connect(_audioContext.destination)
   registerWorklets()
   _waveCache = initializeWaves()

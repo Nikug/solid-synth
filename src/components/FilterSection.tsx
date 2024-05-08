@@ -42,23 +42,23 @@ export const FilterSection: Component = () => {
           label="Cutoff"
           exponential
           value={settings.filter.value}
-          min={0}
-          max={1}
-          defaultValue={0}
+          min={20}
+          max={20000}
+          defaultValue={10000}
           onChange={(value) => setSettings("filter", "value", value)}
+          unit="hz"
         />
         <Knob
           label="Resonance"
           exponential
           value={settings.filter.resonance}
-          min={0}
-          max={1}
-          defaultValue={0}
+          min={0.001}
+          max={30}
+          defaultValue={1}
           onChange={(value) => setSettings("filter", "resonance", value)}
         />
         <Knob
           label="Amount"
-          exponential
           value={settings.filter.amount}
           min={0}
           max={1}

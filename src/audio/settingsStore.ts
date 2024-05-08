@@ -1,5 +1,5 @@
 import { createStore } from "solid-js/store"
-import { audioContext, outputGain } from "./audioContextWrapper"
+import { audioContext, filterNode, lowpass, outputGain } from "./audioContextWrapper"
 import { Wave } from "../worklets/constants"
 
 const changeSmoothing = 1 / 60
@@ -56,16 +56,16 @@ const newSettings = (): Settings => ({
   filter: {
     enabled: false,
     type: "lowpass",
-    value: 0,
-    amount: 1,
-    resonance: 0,
+    value: 400,
+    amount: 0,
+    resonance: 1,
   },
   filterAdsr: {
-    attack: 0,
-    hold: 1000,
-    decay: 0,
-    sustain: 1,
-    release: 0,
+    attack: 10,
+    hold: 50,
+    decay: 500,
+    sustain: 0.2,
+    release: 300,
   },
   oscillators: {
     1: {
