@@ -1,6 +1,7 @@
 import { createStore } from "solid-js/store"
 import { audioContext, outputGain } from "./audioContextWrapper"
 import { Wave } from "../worklets/constants"
+import { EffectSettings } from "./effects"
 
 const changeSmoothing = 1 / 60
 
@@ -13,6 +14,7 @@ export interface Settings {
   filterAdsr: Adsr
   filter: Filter
   oscillators: Record<number, OscillatorSettings>
+  effects: Record<number, EffectSettings>
 }
 
 export interface Filter {
@@ -102,6 +104,26 @@ const newSettings = (): Settings => ({
       unisonVoices: 1,
       unisonDetune: 0,
       unisonWidth: 0.5,
+    },
+  },
+  effects: {
+    1: {
+      id: 1,
+      enabled: false,
+      effect: "distortion",
+      amount: 0.5,
+    },
+    2: {
+      id: 2,
+      enabled: false,
+      effect: "reverb",
+      impulse: "short",
+    },
+    3: {
+      id: 3,
+      enabled: false,
+      effect: "delay",
+      duration: 2000,
     },
   },
 })
