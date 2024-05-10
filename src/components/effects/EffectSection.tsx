@@ -1,9 +1,14 @@
 import { Component, Match, Switch } from "solid-js"
 import { changeEffect, setSettings, settings } from "../../audio/settingsStore"
 import {
+  BitcrusherSettings,
+  CompressorSettings,
+  DelaySettings,
+  DistortionSettings,
   EffectKey,
   EffectSettings,
   EffectValue,
+  FilterSettings,
   ReverbSettings,
   effects,
 } from "../../audio/effects"
@@ -11,6 +16,11 @@ import { Dropdown } from "../Dropdown"
 import { ToggleButton } from "../ToggleButton"
 import { RiMediaVolumeUpFill } from "solid-icons/ri"
 import { ReverbSection } from "./ReverbSection"
+import { DelaySection } from "./DelaySection"
+import { DistortionSection } from "./DistortionSection"
+import { BitcrusherSection } from "./BitcrusherSection"
+import { CompressorSection } from "./CompressorSection"
+import { FilterSection } from "./FilterSection"
 
 const options = Object.entries(effects).map(([key, value]: [EffectKey, EffectValue]) => ({
   id: key,
@@ -43,10 +53,30 @@ export const EffectSection: Component<Props> = (props) => {
         <Match when={effect().effect === "reverb"}>
           <ReverbSection id={props.id} effect={effect() as EffectSettings & ReverbSettings} />
         </Match>
-        <Match when={effect().effect === "delay"}>delay</Match>
-        <Match when={effect().effect === "distortion"}>distortion</Match>
-        <Match when={effect().effect === "bitcrusher"}>bitcrusher</Match>
-        <Match when={effect().effect === "compressor"}>compressor</Match>
+        <Match when={effect().effect === "delay"}>
+          <DelaySection id={props.id} effect={effect() as EffectSettings & DelaySettings} />
+        </Match>
+        <Match when={effect().effect === "distortion"}>
+          <DistortionSection
+            id={props.id}
+            effect={effect() as EffectSettings & DistortionSettings}
+          />
+        </Match>
+        <Match when={effect().effect === "bitcrusher"}>
+          <BitcrusherSection
+            id={props.id}
+            effect={effect() as EffectSettings & BitcrusherSettings}
+          />
+        </Match>
+        <Match when={effect().effect === "compressor"}>
+          <CompressorSection
+            id={props.id}
+            effect={effect() as EffectSettings & CompressorSettings}
+          />
+        </Match>
+        <Match when={effect().effect === "filter"}>
+          <FilterSection id={props.id} effect={effect() as EffectSettings & FilterSettings} />
+        </Match>
       </Switch>
     </div>
   )

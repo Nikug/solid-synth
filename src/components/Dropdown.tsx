@@ -59,7 +59,7 @@ export const Dropdown = <T extends string | number, V extends JSX.Element>(props
     <div
       ref={dropdownRef}
       onclick={handleButtonClick}
-      class="cursor-pointer border rounded w-min px-4 py-0.5 bg-gray-200"
+      class="cursor-pointer border rounded w-min h-min px-4 py-0.5 bg-gray-200"
     >
       <p>{selectedValue()}</p>
       <Show when={open()}>

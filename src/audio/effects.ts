@@ -4,6 +4,7 @@ export const effects = {
   distortion: "Distortion",
   bitcrusher: "Bitcrusher",
   compressor: "Compressor",
+  filter: "Filter",
 } as const
 
 export type EffectKey = keyof typeof effects
@@ -12,7 +13,14 @@ export type EffectValue = (typeof effects)[EffectKey]
 export type EffectSettings = {
   id: number
   enabled: boolean
-} & (ReverbSettings | DelaySettings | DistortionSettings | BitcrusherSettings | CompressorSettings)
+} & (
+  | ReverbSettings
+  | DelaySettings
+  | DistortionSettings
+  | BitcrusherSettings
+  | CompressorSettings
+  | FilterSettings
+)
 
 export interface ReverbSettings {
   effect: "reverb"
@@ -27,6 +35,7 @@ export interface DelaySettings {
 export interface DistortionSettings {
   effect: "distortion"
   amount: number
+  postGain: number
 }
 
 export interface BitcrusherSettings {
@@ -44,6 +53,13 @@ export interface CompressorSettings {
   release: number
 }
 
+export interface FilterSettings {
+  effect: "filter"
+  type: BiquadFilterType
+  value: number
+  resonance: number
+}
+
 export const getDefaultEffectSettings = (id: number, enabled: boolean, effect: EffectKey) => {
   switch (effect) {
     case "reverb":
@@ -56,6 +72,10 @@ export const getDefaultEffectSettings = (id: number, enabled: boolean, effect: E
       return defaultBitcrusherSettings(id, enabled)
     case "compressor":
       return defaultCompressorSettings(id, enabled)
+    case "filter":
+      return defaultFilterSettings(id, enabled)
+    default:
+      throw new Error(`Unknown effect: ${effect}`)
   }
 }
 
@@ -87,6 +107,7 @@ export const defaultDistortionSettings = (
   enabled,
   effect: "distortion",
   amount: 0.5,
+  postGain: 0.5,
 })
 
 export const defaultBitcrusherSettings = (
@@ -112,4 +133,16 @@ export const defaultCompressorSettings = (
   reduction: 6,
   attack: 20,
   release: 300,
+})
+
+export const defaultFilterSettings = (
+  id: number,
+  enabled: boolean,
+): EffectSettings & FilterSettings => ({
+  id,
+  enabled,
+  effect: "filter",
+  type: "lowpass",
+  value: 500,
+  resonance: 1,
 })
