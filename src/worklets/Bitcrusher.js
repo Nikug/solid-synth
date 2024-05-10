@@ -1,11 +1,11 @@
 import { Worklets } from "./constants"
 
 export default class Bitcrusher extends AudioWorkletProcessor {
-  currentValue = 0
-  currentIndex = 0
+  currentValue = [0, 0]
+  currentIndex = [0, 0]
 
-  constructor(...args) {
-    super(...args)
+  constructor(args) {
+    super(args)
   }
 
   static get parameterDescriptors() {
@@ -21,32 +21,34 @@ export default class Bitcrusher extends AudioWorkletProcessor {
   }
 
   process(inputs, outputs, parameters) {
-    if (inputs.length === 0) return false
+    if (inputs.length === 0 || outputs.length === 0) return false
+
+    const input = inputs[0]
+    const output = outputs[0]
+    const channels = output.length
+
+    if (channels === 1) return true
 
     const { bits } = parameters
 
-    for (const output of outputs) {
-      for (let c = 0, limit = output.length; c < limit; ++c) {
-        const outputChannel = output[c]
-        const inputChannel = inputs[0][c]
-        const values = new Float32Array(inputChannel.length)
+    for (let channel = 0; channel < channels; ++channel) {
+      if (input[channel] == null) {
+        continue
+      }
 
-        for (let i = 0, ilimit = inputChannel.length; i < ilimit; ++i) {
-          const sampleBits = bits.length > 1 ? bits[i] : bits[0]
+      for (let i = 0, ilimit = output[channel].length; i < ilimit; ++i) {
+        const sampleBits = bits.length > 1 ? bits[i] : bits[0]
 
-          if (this.currentIndex > sampleBits - 1) {
-            this.currentIndex = 0
-          }
-
-          if (this.currentIndex === 0) {
-            this.currentValue = inputChannel[i]
-          }
-
-          values[i] = this.currentValue
-          currentIndex++
+        if (this.currentIndex[channel] > sampleBits - 1) {
+          this.currentIndex[channel] = 0
         }
 
-        outputChannel.set(values)
+        if (this.currentIndex[channel] === 0) {
+          this.currentValue[channel] = input[channel][i]
+        }
+
+        output[channel][i] = this.currentValue[channel]
+        this.currentIndex[channel]++
       }
     }
 

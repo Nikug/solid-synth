@@ -1,7 +1,7 @@
 import { Component } from "solid-js"
 import { EffectSettings, BitcrusherSettings } from "../../audio/effects"
-import { setSettings } from "../../audio/settingsStore"
 import { Knob } from "../Knob"
+import { setBitcrusherBits } from "../../audio/effectSettings"
 
 interface Props {
   id: number
@@ -19,8 +19,7 @@ export const BitcrusherSection: Component<Props> = (props) => {
         label="Amount"
         step={1}
         exponential
-        // @ts-expect-error
-        onChange={(value) => setSettings("effects", props.id, "bits", value)}
+        onChange={(value) => setBitcrusherBits(props.id, value)}
       />
     </div>
   )

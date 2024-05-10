@@ -1,3 +1,4 @@
+import { Worklets } from "../worklets/constants"
 import {
   audioContext,
   effectsInput,
@@ -5,7 +6,7 @@ import {
   effectsOutput2,
   effectsOutput3,
 } from "./audioContextWrapper"
-import { setReverbImpulse } from "./effectSettings"
+import { setBitcrusherBits, setReverbImpulse } from "./effectSettings"
 import { setSettings, settings } from "./settingsStore"
 
 export const effects = {
@@ -181,6 +182,12 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", reverb)
         setReverbImpulse(id, effect.impulse)
         createConnections(id, reverb)
+        break
+      case "bitcrusher":
+        const bitcrusher = new AudioWorkletNode(audioContext(), Worklets.bitcrusher)
+        setSettings("effects", id, "node", bitcrusher)
+        setBitcrusherBits(id, effect.bits)
+        createConnections(id, bitcrusher)
         break
       default:
         throw new Error(`Unknown effect: ${effect.effect}`)

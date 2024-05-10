@@ -20,3 +20,12 @@ export const setReverbImpulse = async (id: number, impulse: string) => {
   const array = await response.arrayBuffer()
   node.buffer = await audioContext().decodeAudioData(array)
 }
+
+export const setBitcrusherBits = (id: number, bits: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "bits", bits)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("bits").value = bits
+}
