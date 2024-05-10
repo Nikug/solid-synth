@@ -45,7 +45,7 @@ export interface OscillatorSettings {
 const newSettings = (): Settings => ({
   active: false,
   isKnobActive: false,
-  volume: 0.5,
+  volume: 0.2,
   volumeAdsr: {
     attack: 10,
     hold: 50,
@@ -71,7 +71,7 @@ const newSettings = (): Settings => ({
     1: {
       enabled: true,
       waveform: Wave.sine,
-      gain: 0.5,
+      gain: 0.2,
       pitch: 0,
       panning: 0,
       phase: 0,

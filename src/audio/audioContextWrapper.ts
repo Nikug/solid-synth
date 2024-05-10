@@ -1,5 +1,6 @@
+import { softClipCurve } from "../math/curves"
 import Oscillator from "../worklets/Oscillator.js?url"
-import { setSettings } from "./settingsStore"
+import { setSettings, settings } from "./settingsStore"
 import { WaveCache, initializeWaves } from "./waves"
 
 let _audioContext: AudioContext = null
@@ -8,6 +9,7 @@ let _analyserNode: AnalyserNode = null
 let _waveCache: WaveCache = null
 let _filterNode: BiquadFilterNode = null
 let _lowpass: BiquadFilterNode = null
+let _softClip: WaveShaperNode = null
 
 export const audioContext = () => {
   if (!_audioContext) {
@@ -52,20 +54,32 @@ export const filterNode = () => {
   return _filterNode
 }
 
+export const softClip = () => {
+  if (!_softClip) {
+    return null
+  }
+  return _softClip
+}
+
 const initialize = () => {
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()
+  _outputGain.gain.value = settings.volume
   _filterNode = _audioContext.createBiquadFilter()
 
   _lowpass = _audioContext.createBiquadFilter()
   _lowpass.type = "lowpass"
   _lowpass.frequency.value = _audioContext.sampleRate / 2
 
+  _softClip = _audioContext.createWaveShaper()
+  _softClip.curve = softClipCurve()
+
   _analyserNode = _audioContext.createAnalyser()
   _analyserNode.fftSize = 1024
 
   _outputGain.connect(_lowpass)
-  _lowpass.connect(_analyserNode)
+  _lowpass.connect(_softClip)
+  _softClip.connect(_analyserNode)
   _analyserNode.connect(_audioContext.destination)
   registerWorklets()
   _waveCache = initializeWaves()
