@@ -1,7 +1,7 @@
 import { setSettings, settings } from "./settingsStore"
-import longImpulse from "../../public/impulses/long.wav"
-import mediumImpulse from "../../public/impulses/medium.wav"
-import shortImpulse from "../../public/impulses/short.wav"
+import longImpulse from "../assets/impulses/long.wav"
+import mediumImpulse from "../assets/impulses/medium.wav"
+import shortImpulse from "../assets/impulses/short.wav"
 import { audioContext } from "./audioContextWrapper"
 
 export const setReverbImpulse = async (id: number, impulse: string) => {

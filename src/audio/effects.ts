@@ -1,4 +1,4 @@
-import { Worklets } from "../worklets/constants"
+import { Message, Worklets } from "../worklets/constants"
 import {
   audioContext,
   effectsInput,
@@ -184,7 +184,10 @@ export const setEffectState = (id: number, enabled: boolean) => {
         createConnections(id, reverb)
         break
       case "bitcrusher":
-        const bitcrusher = new AudioWorkletNode(audioContext(), Worklets.bitcrusher)
+        const bitcrusher = new AudioWorkletNode(audioContext(), Worklets.bitcrusher, {
+          channelCount: 2,
+          outputChannelCount: [2],
+        })
         setSettings("effects", id, "node", bitcrusher)
         setBitcrusherBits(id, effect.bits)
         createConnections(id, bitcrusher)
@@ -222,6 +225,10 @@ const createConnections = (id: number, node: AudioNode) => {
 const disableEffect = (id: number) => {
   const node = settings.effects[id].node
   node?.disconnect()
+
+  if (node instanceof AudioWorkletNode) {
+    node.port.postMessage({ id: Message.stop })
+  }
 
   switch (id) {
     case 1:

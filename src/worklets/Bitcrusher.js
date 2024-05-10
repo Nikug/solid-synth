@@ -1,11 +1,18 @@
-import { Worklets } from "./constants"
+import { Worklets, Message } from "./constants"
 
 export default class Bitcrusher extends AudioWorkletProcessor {
+  active = true
   currentValue = [0, 0]
-  currentIndex = [0, 0]
+  currentIndex = 0
 
   constructor(args) {
     super(args)
+
+    this.port.onmessage = (event) => {
+      if (event.data.id === Message.stop) {
+        this.active = false
+      }
+    }
   }
 
   static get parameterDescriptors() {
@@ -21,35 +28,34 @@ export default class Bitcrusher extends AudioWorkletProcessor {
   }
 
   process(inputs, outputs, parameters) {
-    if (inputs.length === 0 || outputs.length === 0) return false
+    if (!this.active) return false
 
     const input = inputs[0]
     const output = outputs[0]
-    const channels = output.length
-
-    if (channels === 1) return true
 
     const { bits } = parameters
 
-    for (let channel = 0; channel < channels; ++channel) {
-      if (input[channel] == null) {
+    for (let i = 0, ilimit = output[0].length; i < ilimit; ++i) {
+      const sampleBits = bits.length > 1 ? bits[i] : bits[0]
+
+      if (input[0] === undefined) {
+        output[0][i] = 0
+        output[1][i] = 0
         continue
       }
 
-      for (let i = 0, ilimit = output[channel].length; i < ilimit; ++i) {
-        const sampleBits = bits.length > 1 ? bits[i] : bits[0]
-
-        if (this.currentIndex[channel] > sampleBits - 1) {
-          this.currentIndex[channel] = 0
-        }
-
-        if (this.currentIndex[channel] === 0) {
-          this.currentValue[channel] = input[channel][i]
-        }
-
-        output[channel][i] = this.currentValue[channel]
-        this.currentIndex[channel]++
+      if (this.currentIndex > sampleBits - 1) {
+        this.currentIndex = 0
       }
+
+      if (this.currentIndex === 0) {
+        this.currentValue[0] = input[0][i]
+        this.currentValue[1] = input[1][i]
+      }
+
+      output[0][i] = this.currentValue[0]
+      output[1][i] = this.currentValue[1]
+      this.currentIndex++
     }
 
     return true
