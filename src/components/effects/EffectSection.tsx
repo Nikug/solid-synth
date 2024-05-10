@@ -1,7 +1,8 @@
 import { Component, Match, Switch } from "solid-js"
-import { changeEffect, setSettings, settings } from "../../audio/settingsStore"
+import { changeEffect, settings } from "../../audio/settingsStore"
 import {
   BitcrusherSettings,
+  BitreducerSettings,
   CompressorSettings,
   DelaySettings,
   DistortionSettings,
@@ -22,6 +23,7 @@ import { DistortionSection } from "./DistortionSection"
 import { BitcrusherSection } from "./BitcrusherSection"
 import { CompressorSection } from "./CompressorSection"
 import { FilterSection } from "./FilterSection"
+import { BitreducerSection } from "./BitreducerSection"
 
 const options = Object.entries(effects).map(([key, value]: [EffectKey, EffectValue]) => ({
   id: key,
@@ -67,6 +69,12 @@ export const EffectSection: Component<Props> = (props) => {
           <BitcrusherSection
             id={props.id}
             effect={effect() as EffectSettings & BitcrusherSettings}
+          />
+        </Match>
+        <Match when={effect().effect === "bitreducer"}>
+          <BitreducerSection
+            id={props.id}
+            effect={effect() as EffectSettings & BitreducerSettings}
           />
         </Match>
         <Match when={effect().effect === "compressor"}>

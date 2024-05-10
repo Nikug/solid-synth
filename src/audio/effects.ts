@@ -6,7 +6,7 @@ import {
   effectsOutput2,
   effectsOutput3,
 } from "./audioContextWrapper"
-import { setBitcrusherBits, setReverbImpulse } from "./effectSettings"
+import { setBitcrusherBits, setBitreducerBits, setReverbImpulse } from "./effectSettings"
 import { setSettings, settings } from "./settingsStore"
 
 export const effects = {
@@ -14,6 +14,7 @@ export const effects = {
   delay: "Delay",
   distortion: "Distortion",
   bitcrusher: "Bitcrusher",
+  bitreducer: "Bitreducer",
   compressor: "Compressor",
   filter: "Filter",
 } as const
@@ -29,6 +30,7 @@ export type EffectSettings = {
   | DelaySettings
   | DistortionSettings
   | BitcrusherSettings
+  | BitreducerSettings
   | CompressorSettings
   | FilterSettings
 )
@@ -54,6 +56,12 @@ export interface DistortionSettings {
 
 export interface BitcrusherSettings {
   effect: "bitcrusher"
+  node: AudioNode | null
+  bits: number
+}
+
+export interface BitreducerSettings {
+  effect: "bitreducer"
   node: AudioNode | null
   bits: number
 }
@@ -87,6 +95,8 @@ export const getDefaultEffectSettings = (id: number, enabled: boolean, effect: E
       return defaultDistortionSettings(id, enabled)
     case "bitcrusher":
       return defaultBitcrusherSettings(id, enabled)
+    case "bitreducer":
+      return defaultBitreducerSettings(id, enabled)
     case "compressor":
       return defaultCompressorSettings(id, enabled)
     case "filter":
@@ -141,6 +151,17 @@ export const defaultBitcrusherSettings = (
   bits: 10,
 })
 
+export const defaultBitreducerSettings = (
+  id: number,
+  enabled: boolean,
+): EffectSettings & BitreducerSettings => ({
+  id,
+  enabled,
+  node: null,
+  effect: "bitreducer",
+  bits: 16,
+})
+
 export const defaultCompressorSettings = (
   id: number,
   enabled: boolean,
@@ -191,6 +212,15 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", bitcrusher)
         setBitcrusherBits(id, effect.bits)
         createConnections(id, bitcrusher)
+        break
+      case "bitreducer":
+        const bitreducer = new AudioWorkletNode(audioContext(), Worklets.bitreducer, {
+          channelCount: 2,
+          outputChannelCount: [2],
+        })
+        setSettings("effects", id, "node", bitreducer)
+        setBitreducerBits(id, effect.bits)
+        createConnections(id, bitreducer)
         break
       default:
         throw new Error(`Unknown effect: ${effect.effect}`)

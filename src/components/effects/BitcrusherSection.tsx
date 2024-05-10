@@ -16,7 +16,7 @@ export const BitcrusherSection: Component<Props> = (props) => {
         defaultValue={10}
         min={2}
         max={500}
-        label="Amount"
+        label="Depth"
         step={1}
         exponential
         onChange={(value) => setBitcrusherBits(props.id, value)}

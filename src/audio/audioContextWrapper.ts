@@ -1,6 +1,7 @@
 import { softClipCurve } from "../math/curves"
 import Oscillator from "../worklets/Oscillator.js?url"
 import Bitcrusher from "../worklets/Bitcrusher.js?url"
+import Bitreducer from "../worklets/Bitreducer.js?url"
 import { setSettings, settings } from "./settingsStore"
 import { WaveCache, initializeWaves } from "./waves"
 
@@ -85,4 +86,5 @@ const initialize = async () => {
 const registerWorklets = async () => {
   await audioContext().audioWorklet.addModule(Oscillator)
   await audioContext().audioWorklet.addModule(Bitcrusher)
+  await audioContext().audioWorklet.addModule(Bitreducer)
 }

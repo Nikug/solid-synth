@@ -29,3 +29,12 @@ export const setBitcrusherBits = (id: number, bits: number) => {
 
   node.parameters.get("bits").value = bits
 }
+
+export const setBitreducerBits = (id: number, bits: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "bits", bits)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("bits").value = bits
+}
