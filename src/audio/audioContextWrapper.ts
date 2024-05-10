@@ -4,6 +4,10 @@ import { setSettings, settings } from "./settingsStore"
 import { WaveCache, initializeWaves } from "./waves"
 
 let _audioContext: AudioContext = null
+let _effectsInput: GainNode = null
+let _effectsOutput1: GainNode = null
+let _effectsOutput2: GainNode = null
+let _effectsOutput3: GainNode = null
 let _outputGain: GainNode = null
 let _analyserNode: AnalyserNode = null
 let _waveCache: WaveCache = null
@@ -33,38 +37,23 @@ export const waveCache = () => {
   return _waveCache
 }
 
-export const analyserNode = () => {
-  if (!_analyserNode) {
-    return null
-  }
-  return _analyserNode
-}
-
-export const lowpass = () => {
-  if (!_lowpass) {
-    return null
-  }
-  return _lowpass
-}
-
-export const filterNode = () => {
-  if (!_filterNode) {
-    return null
-  }
-  return _filterNode
-}
-
-export const softClip = () => {
-  if (!_softClip) {
-    return null
-  }
-  return _softClip
-}
+export const analyserNode = () => _analyserNode
+export const lowpass = () => _lowpass
+export const filterNode = () => _filterNode
+export const softClip = () => _softClip
+export const effectsInput = () => _effectsInput
+export const effectsOutput1 = () => _effectsOutput1
+export const effectsOutput2 = () => _effectsOutput2
+export const effectsOutput3 = () => _effectsOutput3
 
 const initialize = async () => {
   setSettings("state", "initializing")
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()
+  _effectsInput = _audioContext.createGain()
+  _effectsOutput1 = _audioContext.createGain()
+  _effectsOutput2 = _audioContext.createGain()
+  _effectsOutput3 = _audioContext.createGain()
   _outputGain.gain.value = settings.volume
   _filterNode = _audioContext.createBiquadFilter()
 
@@ -78,6 +67,10 @@ const initialize = async () => {
   _analyserNode = _audioContext.createAnalyser()
   _analyserNode.fftSize = 1024
 
+  _effectsInput.connect(_effectsOutput1)
+  _effectsOutput1.connect(_effectsOutput2)
+  _effectsOutput2.connect(_effectsOutput3)
+  _effectsOutput3.connect(_outputGain)
   _outputGain.connect(_lowpass)
   _lowpass.connect(_softClip)
   _softClip.connect(_analyserNode)

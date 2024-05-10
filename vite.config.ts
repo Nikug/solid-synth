@@ -17,8 +17,4 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
-  optimizeDeps: {
-    exclude: ["*.wasm"],
-    include: ["node_modules/kissfft-wasm/**/*.cjs"],
-  },
 })

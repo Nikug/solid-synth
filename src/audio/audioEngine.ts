@@ -1,6 +1,6 @@
 import { calculateUnisonDetunes } from "../math/utils"
 import { Adsr, OscillatorSettings, Settings } from "./settingsStore"
-import { audioContext, outputGain, waveCache } from "./audioContextWrapper"
+import { audioContext, effectsInput, waveCache } from "./audioContextWrapper"
 import { Message, Worklets } from "../worklets/constants"
 import { createFilterAdsr, createVolumeAdsr } from "./settingsUtils"
 
@@ -109,7 +109,7 @@ const createOscillator = (
   }
 
   panning.connect(audioGain)
-  audioGain.connect(outputGain())
+  audioGain.connect(effectsInput())
   return {
     oscillators,
     audioGain,

@@ -11,6 +11,7 @@ import {
   FilterSettings,
   ReverbSettings,
   effects,
+  setEffectState,
 } from "../../audio/effects"
 import { Dropdown } from "../Dropdown"
 import { ToggleButton } from "../ToggleButton"
@@ -39,7 +40,7 @@ export const EffectSection: Component<Props> = (props) => {
       <div class="flex gap-2 items-center mb-4">
         <ToggleButton
           selected={effect().enabled}
-          onChange={(value) => setSettings("effects", props.id, "enabled", value)}
+          onChange={(value) => setEffectState(props.id, value)}
         >
           <RiMediaVolumeUpFill size={20} />
         </ToggleButton>
