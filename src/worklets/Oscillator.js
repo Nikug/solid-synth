@@ -1,5 +1,5 @@
 import { Worklets, Message } from "./constants"
-import { degToRad, semitonesToFrequency, loop } from "./math"
+import { semitonesToFrequency, loop } from "./math"
 
 const declickSamples = 32
 

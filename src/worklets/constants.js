@@ -1,5 +1,6 @@
 export const Worklets = {
   oscillator: "oscillator",
+  bitcrusher: "bitcrusher",
 }
 
 export const Message = {
