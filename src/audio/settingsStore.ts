@@ -1,7 +1,14 @@
 import { createStore } from "solid-js/store"
 import { audioContext, outputGain } from "./audioContextWrapper"
 import { Wave } from "../worklets/constants"
-import { EffectSettings } from "./effects"
+import {
+  EffectKey,
+  EffectSettings,
+  defaultDelaySettings,
+  defaultDistortionSettings,
+  defaultReverbSettings,
+  getDefaultEffectSettings,
+} from "./effects"
 
 const changeSmoothing = 1 / 60
 
@@ -107,24 +114,9 @@ const newSettings = (): Settings => ({
     },
   },
   effects: {
-    1: {
-      id: 1,
-      enabled: false,
-      effect: "distortion",
-      amount: 0.5,
-    },
-    2: {
-      id: 2,
-      enabled: false,
-      effect: "reverb",
-      impulse: "short",
-    },
-    3: {
-      id: 3,
-      enabled: false,
-      effect: "delay",
-      duration: 2000,
-    },
+    1: defaultDistortionSettings(1, false),
+    2: defaultReverbSettings(2, false),
+    3: defaultDelaySettings(3, false),
   },
 })
 
@@ -137,4 +129,8 @@ export const setGlobalVolume = (value: number) => {
     audioContext().currentTime + changeSmoothing,
     changeSmoothing,
   )
+}
+
+export const changeEffect = (id: number, effect: EffectKey) => {
+  setSettings("effects", id, getDefaultEffectSettings(id, settings.effects[id].enabled, effect))
 }

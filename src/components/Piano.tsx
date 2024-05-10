@@ -11,7 +11,7 @@ import { Oscilloscope } from "./Oscilloscope"
 import { SpectralAnalyser } from "./SpectralAnalyser"
 import { FilterSection } from "./FilterSection"
 import { TabSection } from "./TabSection"
-import { Dropdown } from "./Dropdown"
+import { EffectSection } from "./effects/EffectSection"
 
 interface Key {
   note: Note
@@ -65,20 +65,12 @@ export const Piano: Component = () => {
             <AdsrSection label="Volume" settingKey="volumeAdsr" />
           </div>
           <FilterSection />
-          <div id="placeholder">
-            <Dropdown
-              key={"reverb"}
-              options={[
-                { id: "reverb", value: "Reverb" },
-                { id: "delay", value: "Delay" },
-                { id: "compressor", value: "Compressor" },
-              ]}
-              onChange={(key) => console.log(key)}
-            />
-          </div>
+          <div id="placeholder"></div>
         </div>
         <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
-          <p>TODO: Effects</p>
+          <EffectSection id={1} />
+          <EffectSection id={2} />
+          <EffectSection id={3} />
         </div>
       </TabSection>
       <div class="flex gap-4">

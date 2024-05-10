@@ -59,7 +59,7 @@ export const Dropdown = <T extends string | number, V extends JSX.Element>(props
     <div
       ref={dropdownRef}
       onclick={handleButtonClick}
-      class="cursor-pointer border rounded w-min px-4 py-1 bg-gray-200"
+      class="cursor-pointer border rounded w-min px-4 py-0.5 bg-gray-200"
     >
       <p>{selectedValue()}</p>
       <Show when={open()}>
@@ -73,7 +73,10 @@ export const Dropdown = <T extends string | number, V extends JSX.Element>(props
               {(option) => (
                 <div
                   class="hover:bg-gray-300 px-4 py-1 cursor-pointer"
-                  onClick={() => props.onChange(option.id, option.value)}
+                  onClick={() => {
+                    props.onChange(option.id, option.value)
+                    setOpen(false)
+                  }}
                 >
                   {option.value}
                 </div>
