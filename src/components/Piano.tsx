@@ -10,6 +10,7 @@ import { OscillatorSection } from "./OscillatorSection"
 import { Oscilloscope } from "./Oscilloscope"
 import { SpectralAnalyser } from "./SpectralAnalyser"
 import { FilterSection } from "./FilterSection"
+import { TabSection } from "./TabSection"
 
 interface Key {
   note: Note
@@ -35,7 +36,7 @@ export const Piano: Component = () => {
 
   return (
     <div class="p-8 border-2 rounded-xl shadow-xl bg-gray-100">
-      <div class="flex gap-4 items-center mb-8">
+      <div class="flex gap-4 items-center mb-4">
         <div class="relative text-gray-400 tracking-widest">
           <p class="tracking-widest font-bold text-gray-600">Solid Synth</p>
           <p class="text-sm">{settings.state}</p>
@@ -54,16 +55,21 @@ export const Piano: Component = () => {
           label="Main volume"
         />
       </div>
-      <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
-        <OscillatorSection id={1} />
-        <OscillatorSection id={2} />
-        <OscillatorSection id={3} />
-        <div class="border rounded-lg p-4">
-          <AdsrSection label="Volume" settingKey="volumeAdsr" />
+      <TabSection headers={["Oscillators", "Effects"]}>
+        <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
+          <OscillatorSection id={1} />
+          <OscillatorSection id={2} />
+          <OscillatorSection id={3} />
+          <div class="border rounded-lg p-4">
+            <AdsrSection label="Volume" settingKey="volumeAdsr" />
+          </div>
+          <FilterSection />
+          <div id="placeholder" />
         </div>
-        <FilterSection />
-        <div id="placeholder" />
-      </div>
+        <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
+          <p>TODO: Effects</p>
+        </div>
+      </TabSection>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">
           <button
