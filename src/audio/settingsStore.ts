@@ -1,11 +1,12 @@
 import { createStore } from "solid-js/store"
-import { audioContext, filterNode, lowpass, outputGain } from "./audioContextWrapper"
+import { audioContext, outputGain } from "./audioContextWrapper"
 import { Wave } from "../worklets/constants"
 
 const changeSmoothing = 1 / 60
 
 export interface Settings {
   active: boolean
+  state: "uninitialized" | "initializing" | "initialized"
   isKnobActive: boolean
   volume: number
   volumeAdsr: Adsr
@@ -44,6 +45,7 @@ export interface OscillatorSettings {
 
 const newSettings = (): Settings => ({
   active: false,
+  state: "uninitialized",
   isKnobActive: false,
   volume: 0.2,
   volumeAdsr: {

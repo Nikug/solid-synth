@@ -36,6 +36,15 @@ export const Piano: Component = () => {
   return (
     <div class="p-8 border-2 rounded-xl shadow-xl bg-gray-100">
       <div class="flex gap-4 items-center mb-8">
+        <div class="relative text-gray-400 tracking-widest">
+          <p class="tracking-widest font-bold text-gray-600">Solid Synth</p>
+          <p class="text-sm">{settings.state}</p>
+          <Show when={settings.state === "uninitialized"}>
+            <p class="text-xs animate-pulse absolute -bottom-4">Press any key</p>
+          </Show>
+        </div>
+        <Oscilloscope />
+        <SpectralAnalyser />
         <Knob
           value={settings.volume}
           min={0}
@@ -44,19 +53,16 @@ export const Piano: Component = () => {
           onChange={(value) => setGlobalVolume(value)}
           label="Main volume"
         />
-
-        <Oscilloscope />
-        <SpectralAnalyser />
       </div>
       <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
+        <OscillatorSection id={1} />
+        <OscillatorSection id={2} />
+        <OscillatorSection id={3} />
         <div class="border rounded-lg p-4">
           <AdsrSection label="Volume" settingKey="volumeAdsr" />
         </div>
         <FilterSection />
         <div id="placeholder" />
-        <OscillatorSection id={1} />
-        <OscillatorSection id={2} />
-        <OscillatorSection id={3} />
       </div>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 justify-center items-center">

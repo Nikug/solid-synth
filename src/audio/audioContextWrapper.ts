@@ -61,7 +61,8 @@ export const softClip = () => {
   return _softClip
 }
 
-const initialize = () => {
+const initialize = async () => {
+  setSettings("state", "initializing")
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()
   _outputGain.gain.value = settings.volume
@@ -81,9 +82,10 @@ const initialize = () => {
   _lowpass.connect(_softClip)
   _softClip.connect(_analyserNode)
   _analyserNode.connect(_audioContext.destination)
-  registerWorklets()
+  await registerWorklets()
   _waveCache = initializeWaves()
   setSettings("active", true)
+  setSettings("state", "initialized")
 }
 
 const registerWorklets = async () => {
