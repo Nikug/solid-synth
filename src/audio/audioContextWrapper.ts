@@ -65,6 +65,7 @@ const initialize = async () => {
 
   _softClip = _audioContext.createWaveShaper()
   _softClip.curve = softClipCurve()
+  _softClip.oversample = "2x"
 
   _analyserNode = _audioContext.createAnalyser()
   _analyserNode.fftSize = 1024

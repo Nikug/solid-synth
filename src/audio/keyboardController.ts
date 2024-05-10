@@ -1,5 +1,7 @@
 import { Keymap, Octave } from "../constants"
+import { audioContext } from "./audioContextWrapper"
 import { addNote, noteBuffer, removeNote, setOctave } from "./noteStore"
+import { settings } from "./settingsStore"
 
 export const initializeKeyboard = () => {
   addEventListener("keydown", handleKeyDown)
@@ -15,6 +17,11 @@ export const teardownKeyboard = () => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.repeat) return
+
+  if (!settings.active && event.key.length === 1) {
+    audioContext()
+  }
+
   if (Keymap[event.code]) {
     let octave = noteBuffer.octave
     if (event.code === "KeyL") {
