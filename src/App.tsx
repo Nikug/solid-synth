@@ -12,8 +12,8 @@ const App: Component = () => {
   })
 
   return (
-    <div class="w-screen h-screen bg-red-100 text-gray-700">
-      <div class="max-w-6xl mx-auto h-screen flex justify-center items-center">
+    <div class="w-screen min-h-screen bg-red-100 text-gray-700">
+      <div class="max-w-6xl mx-auto min-h-screen flex justify-center items-start py-24">
         <Piano />
       </div>
     </div>

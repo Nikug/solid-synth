@@ -8,6 +8,7 @@ import {
   defaultDistortionSettings,
   defaultReverbSettings,
   getDefaultEffectSettings,
+  setEffectState,
 } from "./effects"
 
 const changeSmoothing = 1 / 60
@@ -133,4 +134,7 @@ export const setGlobalVolume = (value: number) => {
 
 export const changeEffect = (id: number, effect: EffectKey) => {
   setSettings("effects", id, getDefaultEffectSettings(id, settings.effects[id].enabled, effect))
+  if (settings.effects[id].enabled) {
+    setEffectState(id, true)
+  }
 }
