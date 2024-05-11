@@ -116,8 +116,8 @@ const newSettings = (): Settings => ({
   },
   effects: {
     1: defaultDistortionSettings(1, false),
-    2: defaultReverbSettings(2, false),
-    3: defaultDelaySettings(3, false),
+    2: defaultDelaySettings(2, false),
+    3: defaultReverbSettings(3, false),
   },
 })
 

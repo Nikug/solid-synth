@@ -230,15 +230,6 @@ export const setEffectState = (id: number, enabled: boolean) => {
 
         const dryGain = audioContext().createGain()
         const wetGain = audioContext().createGain()
-
-        // Input -> dryGain
-        // Input -> convoler
-        //
-        // convoler -> wetGain
-        //
-        // dryGain -> output
-        // wetGain -> output
-
         reverb.connect(wetGain)
 
         setSettings("effects", id, "node", reverb)
