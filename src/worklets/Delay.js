@@ -31,6 +31,13 @@ export default class Delay extends AudioWorkletProcessor {
         maxValue: 1,
         automationRate: "a-rate",
       },
+      {
+        name: "volume",
+        defaultValue: 1,
+        minValue: 0,
+        maxValue: 1,
+        automationRate: "a-rate",
+      },
     ]
   }
 
@@ -40,17 +47,23 @@ export default class Delay extends AudioWorkletProcessor {
     const input = inputs[0]
     const output = outputs[0]
 
-    const { time, feedback } = parameters
+    const { time, feedback, volume } = parameters
 
     for (let i = 0, ilimit = output[0].length; i < ilimit; ++i) {
       const sampleTime = time.length > 1 ? time[i] : time[0]
       const sampleFeedback = feedback.length > 1 ? feedback[i] : feedback[0]
+      const sampleVolume = volume.length > 1 ? volume[i] : volume[0]
 
-      output[0][i] = (input[0]?.[i] ?? 0) + this.delayBuffer[0][this.delayIndex]
-      output[1][i] = (input[1]?.[i] ?? 0) + this.delayBuffer[1][this.delayIndex]
+      const input0 = input[0]?.[i] ?? 0
+      const input1 = input[1]?.[i] ?? 0
 
-      this.delayBuffer[0][this.delayIndex] = output[0][i] * sampleFeedback
-      this.delayBuffer[1][this.delayIndex] = output[1][i] * sampleFeedback
+      output[0][i] = input0 + this.delayBuffer[0][this.delayIndex] * sampleVolume
+      output[1][i] = input1 + this.delayBuffer[1][this.delayIndex] * sampleVolume
+
+      this.delayBuffer[0][this.delayIndex] =
+        input0 + this.delayBuffer[0][this.delayIndex] * sampleFeedback
+      this.delayBuffer[1][this.delayIndex] =
+        input1 + this.delayBuffer[1][this.delayIndex] * sampleFeedback
 
       ++this.delayIndex
       if (

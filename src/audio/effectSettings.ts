@@ -168,3 +168,12 @@ export const setDelayFeedback = (id: number, value: number) => {
 
   node.parameters.get("feedback").value = value
 }
+
+export const setDelayVolume = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "volume", value)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("volume").value = value
+}
