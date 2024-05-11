@@ -1,7 +1,8 @@
 import { Component } from "solid-js"
 import { EffectSettings, ReverbSettings } from "../../audio/effects"
 import { Dropdown } from "../Dropdown"
-import { setReverbImpulse } from "../../audio/effectSettings"
+import { setReverbImpulse, setReverbMix } from "../../audio/effectSettings"
+import { Knob } from "../Knob"
 
 export const options = [
   { id: "short.wav", value: "Short" },
@@ -16,11 +17,19 @@ interface Props {
 
 export const ReverbSection: Component<Props> = (props) => {
   return (
-    <div>
+    <div class="flex gap-2">
       <Dropdown
         key={props.effect.impulse}
         options={options}
         onChange={(value) => setReverbImpulse(props.id, value)}
+      />
+      <Knob
+        value={props.effect.mix}
+        defaultValue={0.5}
+        min={0}
+        max={1}
+        label="Mix"
+        onChange={(value) => setReverbMix(props.id, value)}
       />
     </div>
   )

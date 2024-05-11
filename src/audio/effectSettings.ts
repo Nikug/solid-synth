@@ -1,8 +1,9 @@
-import { setSettings, settings } from "./settingsStore"
+import { changeSmoothing, setSettings, settings } from "./settingsStore"
 import longImpulse from "../assets/impulses/long.wav"
 import mediumImpulse from "../assets/impulses/medium.wav"
 import shortImpulse from "../assets/impulses/short.wav"
 import { audioContext } from "./audioContextWrapper"
+import { ReverbSettings } from "./effects"
 
 export const setReverbImpulse = async (id: number, impulse: string) => {
   // @ts-expect-error
@@ -19,6 +20,18 @@ export const setReverbImpulse = async (id: number, impulse: string) => {
   const response = await fetch(url)
   const array = await response.arrayBuffer()
   node.buffer = await audioContext().decodeAudioData(array)
+}
+
+export const setReverbMix = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "mix", value)
+  const reverbSettings = settings.effects[id] as ReverbSettings
+  const dryGain = reverbSettings.dryGain
+  const wetGain = reverbSettings.wetGain
+  if (!dryGain || !wetGain) return
+
+  dryGain.gain.setValueAtTime(1 - value, audioContext().currentTime + changeSmoothing)
+  wetGain.gain.setValueAtTime(value, audioContext().currentTime + changeSmoothing)
 }
 
 export const setBitcrusherBits = (id: number, bits: number) => {

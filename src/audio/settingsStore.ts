@@ -11,7 +11,7 @@ import {
   setEffectState,
 } from "./effects"
 
-const changeSmoothing = 1 / 60
+export const changeSmoothing = 1 / 60
 
 export interface Settings {
   active: boolean

@@ -55,7 +55,10 @@ export type EffectSettings = {
 export interface ReverbSettings {
   effect: "reverb"
   node: ConvolverNode | null
+  dryGain: GainNode | null
+  wetGain: GainNode | null
   impulse: string
+  mix: number
 }
 
 export interface DelaySettings {
@@ -131,8 +134,11 @@ export const defaultReverbSettings = (
   id,
   enabled,
   node: null,
+  dryGain: null,
+  wetGain: null,
   effect: "reverb",
   impulse: "medium.wav",
+  mix: 0.5,
 })
 
 export const defaultDelaySettings = (
@@ -219,9 +225,28 @@ export const setEffectState = (id: number, enabled: boolean) => {
       case "reverb":
         const reverb = audioContext().createConvolver()
         reverb.normalize = true
+
+        const dryGain = audioContext().createGain()
+        const wetGain = audioContext().createGain()
+
+        // Input -> dryGain
+        // Input -> convoler
+        //
+        // convoler -> wetGain
+        //
+        // dryGain -> output
+        // wetGain -> output
+
+        reverb.connect(wetGain)
+
         setSettings("effects", id, "node", reverb)
+        // @ts-expect-error
+        setSettings("effects", id, "dryGain", dryGain)
+        // @ts-expect-error
+        setSettings("effects", id, "wetGain", wetGain)
+
         setReverbImpulse(id, effect.impulse)
-        createConnections(id, reverb)
+        createReverbConnections(id, dryGain, wetGain, reverb)
         break
       case "bitcrusher":
         const bitcrusher = new AudioWorkletNode(audioContext(), Worklets.bitcrusher, {
@@ -284,7 +309,11 @@ export const setEffectState = (id: number, enabled: boolean) => {
         throw new Error("Unknown effect")
     }
   } else {
-    disableEffect(id)
+    if (effect.effect === "reverb") {
+      disableReverbEffect(id)
+    } else {
+      disableEffect(id)
+    }
   }
 }
 
@@ -304,6 +333,39 @@ const createConnections = (id: number, node: AudioNode) => {
       effectsOutput2().disconnect()
       effectsOutput2().connect(node)
       node.connect(effectsOutput3())
+      break
+    default:
+      throw new Error(`Unknown effect id: ${id}`)
+  }
+}
+
+const createReverbConnections = (
+  id: number,
+  dry: GainNode,
+  wet: GainNode,
+  reverb: ConvolverNode,
+) => {
+  switch (id) {
+    case 1:
+      effectsInput().disconnect()
+      effectsInput().connect(reverb)
+      effectsInput().connect(dry)
+      wet.connect(effectsOutput1())
+      dry.connect(effectsOutput1())
+      break
+    case 2:
+      effectsOutput1().disconnect()
+      effectsOutput1().connect(reverb)
+      effectsOutput1().connect(dry)
+      wet.connect(effectsOutput2())
+      dry.connect(effectsOutput2())
+      break
+    case 3:
+      effectsOutput2().disconnect()
+      effectsOutput2().connect(reverb)
+      effectsOutput2().connect(dry)
+      wet.connect(effectsOutput3())
+      dry.connect(effectsOutput3())
       break
     default:
       throw new Error(`Unknown effect id: ${id}`)
@@ -334,6 +396,40 @@ const disableEffect = (id: number) => {
     default:
       throw new Error(`Unknown effect id: ${id}`)
   }
+  setSettings("effects", id, "node", null)
+  setSettings("effects", id, "enabled", false)
+}
+
+const disableReverbEffect = (id: number) => {
+  const reverbSettings = settings.effects[id] as ReverbSettings
+  const node = reverbSettings.node
+  const dryGain = reverbSettings.dryGain
+  const wetGain = reverbSettings.dryGain
+  node?.disconnect()
+  dryGain?.disconnect()
+  wetGain?.disconnect()
+
+  switch (id) {
+    case 1:
+      effectsInput().disconnect()
+      effectsInput().connect(effectsOutput1())
+      break
+    case 2:
+      effectsOutput1().disconnect()
+      effectsOutput1().connect(effectsOutput2())
+      break
+    case 3:
+      effectsOutput2().disconnect()
+      effectsOutput2().connect(effectsOutput3())
+      break
+    default:
+      throw new Error(`Unknown effect id: ${id}`)
+  }
+  // @ts-expect-error
+  setSettings("effects", id, "dryGain", null)
+  // @ts-expect-error
+  setSettings("effects", id, "wetGain", null)
+
   setSettings("effects", id, "node", null)
   setSettings("effects", id, "enabled", false)
 }
