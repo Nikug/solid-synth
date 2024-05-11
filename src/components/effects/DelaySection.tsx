@@ -1,7 +1,7 @@
 import { Component } from "solid-js"
 import { EffectSettings, DelaySettings } from "../../audio/effects"
-import { setSettings } from "../../audio/settingsStore"
 import { Knob } from "../Knob"
+import { setDelayFeedback, setDelayTime } from "../../audio/effectSettings"
 
 interface Props {
   id: number
@@ -10,16 +10,24 @@ interface Props {
 
 export const DelaySection: Component<Props> = (props) => {
   return (
-    <div>
+    <div class="flex gap-2">
       <Knob
-        value={props.effect.duration}
-        defaultValue={2000}
-        min={0}
-        max={10000}
-        label="Duration"
+        value={props.effect.time}
+        defaultValue={1000}
+        min={1}
+        max={5000}
+        label="time"
+        unit="ms"
         exponential
-        // @ts-expect-error
-        onChange={(value) => setSettings("effects", props.id, "duration", value)}
+        onChange={(value) => setDelayTime(props.id, value)}
+      />
+      <Knob
+        value={props.effect.feedback}
+        defaultValue={0.5}
+        min={0}
+        max={1}
+        label="Feedback"
+        onChange={(value) => setDelayFeedback(props.id, value)}
       />
     </div>
   )

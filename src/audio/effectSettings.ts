@@ -137,3 +137,21 @@ export const setCompressorRelease = (id: number, value: number) => {
 
   node.release.value = value / 1000
 }
+
+export const setDelayTime = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "time", value)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("time").value = value
+}
+
+export const setDelayFeedback = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "feedback", value)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("feedback").value = value
+}

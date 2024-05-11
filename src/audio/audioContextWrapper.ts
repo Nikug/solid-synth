@@ -5,6 +5,7 @@ import Oscillator from "../worklets/Oscillator.js?url"
 import Bitcrusher from "../worklets/Bitcrusher.js?url"
 import Bitreducer from "../worklets/Bitreducer.js?url"
 import Distortion from "../worklets/Distortion.js?url"
+import Delay from "../worklets/Delay.js?url"
 
 let _audioContext: AudioContext = null
 let _effectsInput: GainNode = null
@@ -90,4 +91,5 @@ const registerWorklets = async () => {
   await audioContext().audioWorklet.addModule(Bitcrusher)
   await audioContext().audioWorklet.addModule(Bitreducer)
   await audioContext().audioWorklet.addModule(Distortion)
+  await audioContext().audioWorklet.addModule(Delay)
 }

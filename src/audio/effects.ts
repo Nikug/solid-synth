@@ -14,6 +14,8 @@ import {
   setCompressorRatio,
   setCompressorRelease,
   setCompressorThreshold,
+  setDelayFeedback,
+  setDelayTime,
   setDistortionDrive,
   setDistortionPostGain,
   setFilterFrequency,
@@ -59,7 +61,8 @@ export interface ReverbSettings {
 export interface DelaySettings {
   effect: "delay"
   node: DelayNode | null
-  duration: number
+  time: number
+  feedback: number
 }
 
 export interface DistortionSettings {
@@ -140,7 +143,8 @@ export const defaultDelaySettings = (
   enabled,
   node: null,
   effect: "delay",
-  duration: 2000,
+  time: 500,
+  feedback: 0.5,
 })
 
 export const defaultDistortionSettings = (
@@ -266,8 +270,18 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setCompressorRelease(id, effect.release)
         createConnections(id, compressor)
         break
+      case "delay":
+        const delay = new AudioWorkletNode(audioContext(), Worklets.delay, {
+          channelCount: 2,
+          outputChannelCount: [2],
+        })
+        setSettings("effects", id, "node", delay)
+        setDelayTime(id, effect.time)
+        setDelayFeedback(id, effect.feedback)
+        createConnections(id, delay)
+        break
       default:
-        throw new Error(`Unknown effect: ${effect.effect}`)
+        throw new Error("Unknown effect")
     }
   } else {
     disableEffect(id)

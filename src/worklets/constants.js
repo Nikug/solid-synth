@@ -3,6 +3,7 @@ export const Worklets = {
   bitcrusher: "bitcrusher",
   bitreducer: "bitreducer",
   distortion: "distortion",
+  delay: "delay",
 }
 
 export const Message = {
