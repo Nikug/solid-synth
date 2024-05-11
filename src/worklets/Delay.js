@@ -46,8 +46,8 @@ export default class Delay extends AudioWorkletProcessor {
       const sampleTime = time.length > 1 ? time[i] : time[0]
       const sampleFeedback = feedback.length > 1 ? feedback[i] : feedback[0]
 
-      output[0][i] = input[0]?.[i] ?? 0 + this.delayBuffer[0][this.delayIndex]
-      output[1][i] = input[1]?.[i] ?? 0 + this.delayBuffer[1][this.delayIndex]
+      output[0][i] = (input[0]?.[i] ?? 0) + this.delayBuffer[0][this.delayIndex]
+      output[1][i] = (input[1]?.[i] ?? 0) + this.delayBuffer[1][this.delayIndex]
 
       this.delayBuffer[0][this.delayIndex] = output[0][i] * sampleFeedback
       this.delayBuffer[1][this.delayIndex] = output[1][i] * sampleFeedback
