@@ -23,6 +23,7 @@ import {
   setFilterResonance,
   setFilterType,
   setReverbImpulse,
+  setReverbMix,
 } from "./effectSettings"
 import { setSettings, settings } from "./settingsStore"
 
@@ -239,6 +240,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "wetGain", wetGain)
 
         setReverbImpulse(id, effect.impulse)
+        setReverbMix(id, effect.mix)
         createReverbConnections(id, dryGain, wetGain, reverb)
         break
       case "bitcrusher":
