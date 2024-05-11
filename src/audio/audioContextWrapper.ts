@@ -1,11 +1,11 @@
 import { softClipCurve } from "../math/curves"
 import { setSettings, settings } from "./settingsStore"
 import { WaveCache, initializeWaves } from "./waves"
-import Oscillator from "../worklets/Oscillator.js?url"
-import Bitcrusher from "../worklets/Bitcrusher.js?url"
-import Bitreducer from "../worklets/Bitreducer.js?url"
-import Distortion from "../worklets/Distortion.js?url"
-import Delay from "../worklets/Delay.js?url"
+import Oscillator from "../worklets/Oscillator.js?worker&url"
+import Bitcrusher from "../worklets/Bitcrusher.js?worker&url"
+import Bitreducer from "../worklets/Bitreducer.js?worker&url"
+import Distortion from "../worklets/Distortion.js?worker&url"
+import Delay from "../worklets/Delay.js?worker&url"
 
 let _audioContext: AudioContext = null
 let _effectsInput: GainNode = null
