@@ -17,6 +17,7 @@ export const DistortionSection: Component<Props> = (props) => {
         min={-30}
         max={30}
         label="Drive"
+        unit="dB"
         onChange={(value) => setDistortionDrive(props.id, value)}
       />
       <Knob
@@ -25,6 +26,7 @@ export const DistortionSection: Component<Props> = (props) => {
         min={-30}
         max={30}
         label="Post gain"
+        unit="dB"
         onChange={(value) => setDistortionPostGain(props.id, value)}
       />
     </div>
