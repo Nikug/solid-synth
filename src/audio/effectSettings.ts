@@ -92,3 +92,48 @@ export const setFilterType = (id: number, type: BiquadFilterType) => {
 
   node.type = type
 }
+
+export const setCompressorThreshold = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "threshold", value)
+  const node = settings.effects[id].node as DynamicsCompressorNode
+  if (!node) return
+
+  node.threshold.value = value
+}
+
+export const setCompressorKnee = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "knee", value)
+  const node = settings.effects[id].node as DynamicsCompressorNode
+  if (!node) return
+
+  node.knee.value = value
+}
+
+export const setCompressorRatio = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "ratio", value)
+  const node = settings.effects[id].node as DynamicsCompressorNode
+  if (!node) return
+
+  node.ratio.value = value
+}
+
+export const setCompressorAttack = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "attack", value)
+  const node = settings.effects[id].node as DynamicsCompressorNode
+  if (!node) return
+
+  node.attack.value = value / 1000
+}
+
+export const setCompressorRelease = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "release", value)
+  const node = settings.effects[id].node as DynamicsCompressorNode
+  if (!node) return
+
+  node.release.value = value / 1000
+}

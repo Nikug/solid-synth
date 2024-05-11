@@ -9,6 +9,11 @@ import {
 import {
   setBitcrusherBits,
   setBitreducerBits,
+  setCompressorAttack,
+  setCompressorKnee,
+  setCompressorRatio,
+  setCompressorRelease,
+  setCompressorThreshold,
   setDistortionDrive,
   setDistortionPostGain,
   setFilterFrequency,
@@ -82,7 +87,6 @@ export interface CompressorSettings {
   threshold: number
   knee: number
   ratio: number
-  reduction: number
   attack: number
   release: number
 }
@@ -182,9 +186,8 @@ export const defaultCompressorSettings = (
   node: null,
   effect: "compressor",
   threshold: -24,
-  knee: 12,
-  ratio: 0.5,
-  reduction: 6,
+  knee: 30,
+  ratio: 12,
   attack: 20,
   release: 300,
 })
@@ -252,6 +255,16 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setFilterResonance(id, effect.resonance)
         setFilterGain(id, effect.gain)
         createConnections(id, filter)
+        break
+      case "compressor":
+        const compressor = audioContext().createDynamicsCompressor()
+        setSettings("effects", id, "node", compressor)
+        setCompressorThreshold(id, effect.threshold)
+        setCompressorKnee(id, effect.knee)
+        setCompressorRatio(id, effect.ratio)
+        setCompressorAttack(id, effect.attack)
+        setCompressorRelease(id, effect.release)
+        createConnections(id, compressor)
         break
       default:
         throw new Error(`Unknown effect: ${effect.effect}`)
