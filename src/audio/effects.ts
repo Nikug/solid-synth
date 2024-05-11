@@ -6,7 +6,13 @@ import {
   effectsOutput2,
   effectsOutput3,
 } from "./audioContextWrapper"
-import { setBitcrusherBits, setBitreducerBits, setReverbImpulse } from "./effectSettings"
+import {
+  setBitcrusherBits,
+  setBitreducerBits,
+  setDistortionDrive,
+  setDistortionPostGain,
+  setReverbImpulse,
+} from "./effectSettings"
 import { setSettings, settings } from "./settingsStore"
 
 export const effects = {
@@ -50,7 +56,7 @@ export interface DelaySettings {
 export interface DistortionSettings {
   effect: "distortion"
   node: WaveShaperNode | null
-  amount: number
+  drive: number
   postGain: number
 }
 
@@ -136,8 +142,8 @@ export const defaultDistortionSettings = (
   enabled,
   node: null,
   effect: "distortion",
-  amount: 0.5,
-  postGain: 0.5,
+  drive: 0,
+  postGain: 0,
 })
 
 export const defaultBitcrusherSettings = (
@@ -221,6 +227,16 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", bitreducer)
         setBitreducerBits(id, effect.bits)
         createConnections(id, bitreducer)
+        break
+      case "distortion":
+        const distortion = new AudioWorkletNode(audioContext(), Worklets.distortion, {
+          channelCount: 2,
+          outputChannelCount: [2],
+        })
+        setSettings("effects", id, "node", distortion)
+        setDistortionDrive(id, effect.drive)
+        setDistortionPostGain(id, effect.postGain)
+        createConnections(id, distortion)
         break
       default:
         throw new Error(`Unknown effect: ${effect.effect}`)

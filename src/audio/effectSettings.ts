@@ -38,3 +38,21 @@ export const setBitreducerBits = (id: number, bits: number) => {
 
   node.parameters.get("bits").value = bits
 }
+
+export const setDistortionDrive = (id: number, drive: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "drive", drive)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("drive").value = drive
+}
+
+export const setDistortionPostGain = (id: number, postGain: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "postGain", postGain)
+  const node = settings.effects[id].node as AudioWorkletNode
+  if (!node) return
+
+  node.parameters.get("postGain").value = postGain
+}

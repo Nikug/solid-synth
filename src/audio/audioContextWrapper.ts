@@ -1,9 +1,10 @@
 import { softClipCurve } from "../math/curves"
+import { setSettings, settings } from "./settingsStore"
+import { WaveCache, initializeWaves } from "./waves"
 import Oscillator from "../worklets/Oscillator.js?url"
 import Bitcrusher from "../worklets/Bitcrusher.js?url"
 import Bitreducer from "../worklets/Bitreducer.js?url"
-import { setSettings, settings } from "./settingsStore"
-import { WaveCache, initializeWaves } from "./waves"
+import Distortion from "../worklets/Distortion.js?url"
 
 let _audioContext: AudioContext = null
 let _effectsInput: GainNode = null
@@ -88,4 +89,5 @@ const registerWorklets = async () => {
   await audioContext().audioWorklet.addModule(Oscillator)
   await audioContext().audioWorklet.addModule(Bitcrusher)
   await audioContext().audioWorklet.addModule(Bitreducer)
+  await audioContext().audioWorklet.addModule(Distortion)
 }
