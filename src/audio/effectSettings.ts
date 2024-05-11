@@ -56,3 +56,39 @@ export const setDistortionPostGain = (id: number, postGain: number) => {
 
   node.parameters.get("postGain").value = postGain
 }
+
+export const setFilterFrequency = (id: number, frequency: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "value", frequency)
+  const node = settings.effects[id].node as BiquadFilterNode
+  if (!node) return
+
+  node.frequency.value = frequency
+}
+
+export const setFilterResonance = (id: number, resonance: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "resonance", resonance)
+  const node = settings.effects[id].node as BiquadFilterNode
+  if (!node) return
+
+  node.Q.value = resonance
+}
+
+export const setFilterGain = (id: number, value: number) => {
+  // @ts-expect-error
+  setSettings("effects", id, "gain", value)
+  const node = settings.effects[id].node as BiquadFilterNode
+  if (!node) return
+
+  node.gain.value = value
+}
+
+export const setFilterType = (id: number, type: BiquadFilterType) => {
+  // @ts-expect-error
+  setSettings("effects", id, "type", type)
+  const node = settings.effects[id].node as BiquadFilterNode
+  if (!node) return
+
+  node.type = type
+}

@@ -11,6 +11,10 @@ import {
   setBitreducerBits,
   setDistortionDrive,
   setDistortionPostGain,
+  setFilterFrequency,
+  setFilterGain,
+  setFilterResonance,
+  setFilterType,
   setReverbImpulse,
 } from "./effectSettings"
 import { setSettings, settings } from "./settingsStore"
@@ -89,6 +93,7 @@ export interface FilterSettings {
   type: BiquadFilterType
   value: number
   resonance: number
+  gain: number
 }
 
 export const getDefaultEffectSettings = (id: number, enabled: boolean, effect: EffectKey) => {
@@ -195,6 +200,7 @@ export const defaultFilterSettings = (
   type: "lowpass",
   value: 500,
   resonance: 1,
+  gain: 0,
 })
 
 export const setEffectState = (id: number, enabled: boolean) => {
@@ -237,6 +243,15 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setDistortionDrive(id, effect.drive)
         setDistortionPostGain(id, effect.postGain)
         createConnections(id, distortion)
+        break
+      case "filter":
+        const filter = audioContext().createBiquadFilter()
+        setSettings("effects", id, "node", filter)
+        setFilterType(id, effect.type)
+        setFilterFrequency(id, effect.value)
+        setFilterResonance(id, effect.resonance)
+        setFilterGain(id, effect.gain)
+        createConnections(id, filter)
         break
       default:
         throw new Error(`Unknown effect: ${effect.effect}`)
