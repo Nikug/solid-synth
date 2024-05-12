@@ -12,6 +12,7 @@ import { SpectralAnalyser } from "./SpectralAnalyser"
 import { FilterSection } from "./FilterSection"
 import { TabSection } from "./TabSection"
 import { EffectSection } from "./effects/EffectSection"
+import { PresetSection } from "./PresetSection"
 
 interface Key {
   note: Note
@@ -55,6 +56,8 @@ export const Piano: Component = () => {
           onChange={(value) => setGlobalVolume(value)}
           label="Main volume"
         />
+        <div class="flex-grow" />
+        <PresetSection />
       </div>
       <TabSection headers={["Oscillators", "Effects"]}>
         <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">

@@ -19,6 +19,7 @@ export const changeSmoothing = 1 / 60
 export interface Settings {
   active: boolean
   state: "uninitialized" | "initializing" | "initialized"
+  presetName: string
   isKnobActive: boolean
   volume: number
   volumeAdsr: Adsr
@@ -59,6 +60,7 @@ export interface OscillatorSettings {
 const newSettings = (): Settings => ({
   active: false,
   state: "uninitialized",
+  presetName: "Default",
   isKnobActive: false,
   volume: 0.2,
   volumeAdsr: {
