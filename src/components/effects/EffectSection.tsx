@@ -40,18 +40,21 @@ export const EffectSection: Component<Props> = (props) => {
 
   return (
     <div class="border rounded-lg p-4 relative">
-      <div class="flex gap-2 items-center mb-4">
+      <div class="flex gap-2 items-center mb-6">
         <ToggleButton
           selected={effect().enabled}
           onChange={(value) => setEffectState(props.id, value)}
         >
           <RiMediaVolumeUpFill size={20} />
         </ToggleButton>
-        <Dropdown
-          key={effect().effect}
-          options={options}
-          onChange={(value) => changeEffect(props.id, value)}
-        />
+        <div class="flex-grow">
+          <Dropdown
+            key={effect().effect}
+            options={options}
+            onChange={(value) => changeEffect(props.id, value)}
+          />
+        </div>
+        <p class="text-gray-600">Effect {props.id}</p>
       </div>
       <Switch>
         <Match when={effect().effect === "reverb"}>
@@ -89,7 +92,7 @@ export const EffectSection: Component<Props> = (props) => {
         </Match>
       </Switch>
       <Show when={props.arrow}>
-        <div class="absolute -right-4 top-1/2">
+        <div class="absolute -right-4 top-1/2 text-gray-400">
           <RiArrowsArrowRightSLine size={22} />
         </div>
       </Show>

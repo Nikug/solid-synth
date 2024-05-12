@@ -67,13 +67,21 @@ export const Piano: Component = () => {
           <FilterSection />
           <div id="placeholder"></div>
         </div>
-        <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
-          <EffectSection id={1} arrow />
-          <EffectSection id={2} arrow />
-          <EffectSection id={3} />
-          <EffectSection id={4} arrow />
-          <EffectSection id={5} arrow />
-          <EffectSection id={6} />
+        <div>
+          <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4">
+            <EffectSection id={1} arrow />
+            <EffectSection id={2} arrow />
+            <EffectSection id={3} />
+          </div>
+          <div class="relative w-2/3 mx-auto h-8">
+            <div class="border-gray-200 border-b-2 border-r-2 rounded-br-lg h-4 absolute left-1/2 right-0 top-[1px]" />
+            <div class="border-gray-200 border-t-2 border-l-2 rounded-tl-lg h-4 absolute top-1/2 left-0 right-1/2 -mt-[1px]" />
+          </div>
+          <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
+            <EffectSection id={4} arrow />
+            <EffectSection id={5} arrow />
+            <EffectSection id={6} />
+          </div>
         </div>
       </TabSection>
       <div class="flex gap-4">
