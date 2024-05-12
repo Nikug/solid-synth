@@ -104,14 +104,14 @@ export default class Oscillator extends AudioWorkletProcessor {
 const calculateWave = (wave, cache, t, phase) => {
   let sample = cache[wave].sampled
 
-  const position = t * sample.length
-  const phaseOffset = (phase / 360) * sample.length
+  const position = (t + phase / 360) * sample.length
+  const interpolationT = position % 1
 
-  const previous = Math.floor(position + phaseOffset) % sample.length
+  const previous = Math.floor(position) % sample.length
   const next = loop(previous + 1, 0, sample.length - 1)
 
   // Linearly interpolate between samples
-  return (sample[previous] + sample[next]) / 2
+  return sample[previous] + (sample[next] - sample[previous]) * interpolationT
 }
 
 registerProcessor(Worklets.oscillator, Oscillator)
