@@ -12,6 +12,9 @@ let _effectsInput: GainNode = null
 let _effectsOutput1: GainNode = null
 let _effectsOutput2: GainNode = null
 let _effectsOutput3: GainNode = null
+let _effectsOutput4: GainNode = null
+let _effectsOutput5: GainNode = null
+let _effectsOutput6: GainNode = null
 let _outputGain: GainNode = null
 let _analyserNode: AnalyserNode = null
 let _waveCache: WaveCache = null
@@ -49,6 +52,9 @@ export const effectsInput = () => _effectsInput
 export const effectsOutput1 = () => _effectsOutput1
 export const effectsOutput2 = () => _effectsOutput2
 export const effectsOutput3 = () => _effectsOutput3
+export const effectsOutput4 = () => _effectsOutput4
+export const effectsOutput5 = () => _effectsOutput5
+export const effectsOutput6 = () => _effectsOutput6
 
 const initialize = async () => {
   setSettings("state", "initializing")
@@ -58,6 +64,9 @@ const initialize = async () => {
   _effectsOutput1 = _audioContext.createGain()
   _effectsOutput2 = _audioContext.createGain()
   _effectsOutput3 = _audioContext.createGain()
+  _effectsOutput4 = _audioContext.createGain()
+  _effectsOutput5 = _audioContext.createGain()
+  _effectsOutput6 = _audioContext.createGain()
   _outputGain.gain.value = settings.volume
   _filterNode = _audioContext.createBiquadFilter()
 
@@ -75,7 +84,10 @@ const initialize = async () => {
   _effectsInput.connect(_effectsOutput1)
   _effectsOutput1.connect(_effectsOutput2)
   _effectsOutput2.connect(_effectsOutput3)
-  _effectsOutput3.connect(_outputGain)
+  _effectsOutput3.connect(_effectsOutput4)
+  _effectsOutput4.connect(_effectsOutput5)
+  _effectsOutput5.connect(_effectsOutput6)
+  _effectsOutput6.connect(_outputGain)
   _outputGain.connect(_lowpass)
   _lowpass.connect(_softClip)
   _softClip.connect(_analyserNode)
@@ -93,3 +105,30 @@ const registerWorklets = async () => {
   await audioContext().audioWorklet.addModule(Distortion)
   await audioContext().audioWorklet.addModule(Delay)
 }
+
+export const effectConnections = () => ({
+  1: {
+    input: _effectsInput,
+    output: _effectsOutput1,
+  },
+  2: {
+    input: _effectsOutput1,
+    output: _effectsOutput2,
+  },
+  3: {
+    input: _effectsOutput2,
+    output: _effectsOutput3,
+  },
+  4: {
+    input: _effectsOutput3,
+    output: _effectsOutput4,
+  },
+  5: {
+    input: _effectsOutput4,
+    output: _effectsOutput5,
+  },
+  6: {
+    input: _effectsOutput5,
+    output: _effectsOutput6,
+  },
+})

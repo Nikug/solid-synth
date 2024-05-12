@@ -4,8 +4,11 @@ import { Wave } from "../worklets/constants"
 import {
   EffectKey,
   EffectSettings,
+  defaultBitcrusherSettings,
+  defaultCompressorSettings,
   defaultDelaySettings,
   defaultDistortionSettings,
+  defaultFilterSettings,
   defaultReverbSettings,
   getDefaultEffectSettings,
   setEffectState,
@@ -118,6 +121,9 @@ const newSettings = (): Settings => ({
     1: defaultDistortionSettings(1, false),
     2: defaultDelaySettings(2, false),
     3: defaultReverbSettings(3, false),
+    4: defaultFilterSettings(4, false),
+    5: defaultCompressorSettings(5, false),
+    6: defaultBitcrusherSettings(6, false),
   },
 })
 

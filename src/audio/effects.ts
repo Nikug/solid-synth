@@ -1,11 +1,5 @@
 import { Message, Worklets } from "../worklets/constants"
-import {
-  audioContext,
-  effectsInput,
-  effectsOutput1,
-  effectsOutput2,
-  effectsOutput3,
-} from "./audioContextWrapper"
+import { audioContext, effectConnections } from "./audioContextWrapper"
 import {
   setBitcrusherBits,
   setBitreducerBits,
@@ -241,7 +235,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
 
         setReverbImpulse(id, effect.impulse)
         setReverbMix(id, effect.mix)
-        createReverbConnections(id, dryGain, wetGain, reverb)
+        createConnections(id, [reverb, dryGain], [dryGain, wetGain])
         break
       case "bitcrusher":
         const bitcrusher = new AudioWorkletNode(audioContext(), Worklets.bitcrusher, {
@@ -250,7 +244,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         })
         setSettings("effects", id, "node", bitcrusher)
         setBitcrusherBits(id, effect.bits)
-        createConnections(id, bitcrusher)
+        createConnections(id, [bitcrusher], [bitcrusher])
         break
       case "bitreducer":
         const bitreducer = new AudioWorkletNode(audioContext(), Worklets.bitreducer, {
@@ -259,7 +253,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         })
         setSettings("effects", id, "node", bitreducer)
         setBitreducerBits(id, effect.bits)
-        createConnections(id, bitreducer)
+        createConnections(id, [bitreducer], [bitreducer])
         break
       case "distortion":
         const distortion = new AudioWorkletNode(audioContext(), Worklets.distortion, {
@@ -269,7 +263,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", distortion)
         setDistortionDrive(id, effect.drive)
         setDistortionPostGain(id, effect.postGain)
-        createConnections(id, distortion)
+        createConnections(id, [distortion], [distortion])
         break
       case "filter":
         const filter = audioContext().createBiquadFilter()
@@ -278,7 +272,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setFilterFrequency(id, effect.value)
         setFilterResonance(id, effect.resonance)
         setFilterGain(id, effect.gain)
-        createConnections(id, filter)
+        createConnections(id, [filter], [filter])
         break
       case "compressor":
         const compressor = audioContext().createDynamicsCompressor()
@@ -288,7 +282,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setCompressorRatio(id, effect.ratio)
         setCompressorAttack(id, effect.attack)
         setCompressorRelease(id, effect.release)
-        createConnections(id, compressor)
+        createConnections(id, [compressor], [compressor])
         break
       case "delay":
         const delay = new AudioWorkletNode(audioContext(), Worklets.delay, {
@@ -298,7 +292,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", delay)
         setDelayTime(id, effect.time)
         setDelayFeedback(id, effect.feedback)
-        createConnections(id, delay)
+        createConnections(id, [delay], [delay])
         break
       default:
         throw new Error("Unknown effect")
@@ -312,59 +306,16 @@ export const setEffectState = (id: number, enabled: boolean) => {
   }
 }
 
-const createConnections = (id: number, node: AudioNode) => {
-  switch (id) {
-    case 1:
-      effectsInput().disconnect()
-      effectsInput().connect(node)
-      node.connect(effectsOutput1())
-      break
-    case 2:
-      effectsOutput1().disconnect()
-      effectsOutput1().connect(node)
-      node.connect(effectsOutput2())
-      break
-    case 3:
-      effectsOutput2().disconnect()
-      effectsOutput2().connect(node)
-      node.connect(effectsOutput3())
-      break
-    default:
-      throw new Error(`Unknown effect id: ${id}`)
-  }
-}
+const createConnections = (id: number, effectInputs: AudioNode[], effectOutputs: AudioNode[]) => {
+  const { input, output } = effectConnections()[id]
 
-const createReverbConnections = (
-  id: number,
-  dry: GainNode,
-  wet: GainNode,
-  reverb: ConvolverNode,
-) => {
-  switch (id) {
-    case 1:
-      effectsInput().disconnect()
-      effectsInput().connect(reverb)
-      effectsInput().connect(dry)
-      wet.connect(effectsOutput1())
-      dry.connect(effectsOutput1())
-      break
-    case 2:
-      effectsOutput1().disconnect()
-      effectsOutput1().connect(reverb)
-      effectsOutput1().connect(dry)
-      wet.connect(effectsOutput2())
-      dry.connect(effectsOutput2())
-      break
-    case 3:
-      effectsOutput2().disconnect()
-      effectsOutput2().connect(reverb)
-      effectsOutput2().connect(dry)
-      wet.connect(effectsOutput3())
-      dry.connect(effectsOutput3())
-      break
-    default:
-      throw new Error(`Unknown effect id: ${id}`)
+  if (!input || !output) {
+    throw new Error(`Unknown effect id: ${id}`)
   }
+
+  input.disconnect()
+  effectInputs.forEach((effectInput) => input.connect(effectInput))
+  effectOutputs.forEach((effectOutput) => effectOutput.connect(output))
 }
 
 const disableEffect = (id: number) => {
@@ -375,56 +326,29 @@ const disableEffect = (id: number) => {
     node.port.postMessage({ id: Message.stop })
   }
 
-  switch (id) {
-    case 1:
-      effectsInput().disconnect()
-      effectsInput().connect(effectsOutput1())
-      break
-    case 2:
-      effectsOutput1().disconnect()
-      effectsOutput1().connect(effectsOutput2())
-      break
-    case 3:
-      effectsOutput2().disconnect()
-      effectsOutput2().connect(effectsOutput3())
-      break
-    default:
-      throw new Error(`Unknown effect id: ${id}`)
+  const { input, output } = effectConnections()[id]
+  if (!input || !output) {
+    throw new Error(`Unknown effect id: ${id}`)
   }
+
+  input.disconnect()
+  input.connect(output)
+
   setSettings("effects", id, "node", null)
   setSettings("effects", id, "enabled", false)
 }
 
 const disableReverbEffect = (id: number) => {
   const reverbSettings = settings.effects[id] as ReverbSettings
-  const node = reverbSettings.node
   const dryGain = reverbSettings.dryGain
   const wetGain = reverbSettings.dryGain
-  node?.disconnect()
   dryGain?.disconnect()
   wetGain?.disconnect()
 
-  switch (id) {
-    case 1:
-      effectsInput().disconnect()
-      effectsInput().connect(effectsOutput1())
-      break
-    case 2:
-      effectsOutput1().disconnect()
-      effectsOutput1().connect(effectsOutput2())
-      break
-    case 3:
-      effectsOutput2().disconnect()
-      effectsOutput2().connect(effectsOutput3())
-      break
-    default:
-      throw new Error(`Unknown effect id: ${id}`)
-  }
+  disableEffect(id)
+
   // @ts-expect-error
   setSettings("effects", id, "dryGain", null)
   // @ts-expect-error
   setSettings("effects", id, "wetGain", null)
-
-  setSettings("effects", id, "node", null)
-  setSettings("effects", id, "enabled", false)
 }

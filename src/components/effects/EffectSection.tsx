@@ -1,4 +1,4 @@
-import { Component, Match, Switch } from "solid-js"
+import { Component, Match, Show, Switch } from "solid-js"
 import { changeEffect, settings } from "../../audio/settingsStore"
 import {
   BitcrusherSettings,
@@ -16,7 +16,7 @@ import {
 } from "../../audio/effects"
 import { Dropdown } from "../Dropdown"
 import { ToggleButton } from "../ToggleButton"
-import { RiMediaVolumeUpFill } from "solid-icons/ri"
+import { RiArrowsArrowRightSLine, RiMediaVolumeUpFill } from "solid-icons/ri"
 import { ReverbSection } from "./ReverbSection"
 import { DelaySection } from "./DelaySection"
 import { DistortionSection } from "./DistortionSection"
@@ -32,13 +32,14 @@ const options = Object.entries(effects).map(([key, value]: [EffectKey, EffectVal
 
 interface Props {
   id: number
+  arrow?: boolean
 }
 
 export const EffectSection: Component<Props> = (props) => {
   const effect = () => settings.effects[props.id]
 
   return (
-    <div class="border rounded-lg p-4">
+    <div class="border rounded-lg p-4 relative">
       <div class="flex gap-2 items-center mb-4">
         <ToggleButton
           selected={effect().enabled}
@@ -87,6 +88,11 @@ export const EffectSection: Component<Props> = (props) => {
           <FilterSection id={props.id} effect={effect() as EffectSettings & FilterSettings} />
         </Match>
       </Switch>
+      <Show when={props.arrow}>
+        <div class="absolute -right-4 top-1/2">
+          <RiArrowsArrowRightSLine size={22} />
+        </div>
+      </Show>
     </div>
   )
 }

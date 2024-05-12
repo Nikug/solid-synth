@@ -68,9 +68,12 @@ export const Piano: Component = () => {
           <div id="placeholder"></div>
         </div>
         <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
-          <EffectSection id={1} />
-          <EffectSection id={2} />
+          <EffectSection id={1} arrow />
+          <EffectSection id={2} arrow />
           <EffectSection id={3} />
+          <EffectSection id={4} arrow />
+          <EffectSection id={5} arrow />
+          <EffectSection id={6} />
         </div>
       </TabSection>
       <div class="flex gap-4">
