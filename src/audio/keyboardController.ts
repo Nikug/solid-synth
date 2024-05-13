@@ -1,4 +1,5 @@
 import { Keymap, Octave } from "../constants"
+import { presetSettings } from "../presets/presetStore"
 import { audioContext } from "./audioContextWrapper"
 import { addNote, noteBuffer, removeNote, setOctave } from "./noteStore"
 import { settings } from "./settingsStore"
@@ -16,6 +17,8 @@ export const teardownKeyboard = () => {
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
+  if (presetSettings.showSavePopup) return
+
   if (event.repeat) return
 
   if (!settings.active && event.key.length === 1) {
@@ -33,6 +36,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 }
 
 const handleKeyUp = (event: KeyboardEvent) => {
+  if (presetSettings.showSavePopup) return
   if (event.repeat) return
   if (Keymap[event.code]) {
     let octave = noteBuffer.octave

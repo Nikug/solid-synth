@@ -1,6 +1,8 @@
-import { onCleanup, onMount, type Component } from "solid-js"
+import { Show, onCleanup, onMount, type Component } from "solid-js"
 import { Piano } from "./components/Piano"
 import { initializeKeyboard, teardownKeyboard } from "./audio/keyboardController"
+import { PresetPopup } from "./components/PresetPopup"
+import { presetSettings } from "./presets/presetStore"
 
 const App: Component = () => {
   onMount(() => {
@@ -16,6 +18,9 @@ const App: Component = () => {
       <div class="max-w-6xl mx-auto min-h-screen flex justify-center items-start py-24">
         <Piano />
       </div>
+      <Show when={presetSettings.showSavePopup}>
+        <PresetPopup />
+      </Show>
     </div>
   )
 }
