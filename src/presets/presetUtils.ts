@@ -64,15 +64,16 @@ const handlePresetLoading = async (preset: Settings) => {
     await initialize()
   }
 
+  for (let i = 1; i <= 6; i++) {
+    setEffectState(i, false)
+  }
+
   preset.active = true
   preset.state = "initialized"
   preset.isKnobActive = false
   setSettings(preset)
 
-  setEffectState(1, preset.effects[1].enabled)
-  setEffectState(2, preset.effects[2].enabled)
-  setEffectState(3, preset.effects[3].enabled)
-  setEffectState(4, preset.effects[4].enabled)
-  setEffectState(5, preset.effects[5].enabled)
-  setEffectState(6, preset.effects[6].enabled)
+  for (let i = 1; i <= 6; i++) {
+    setEffectState(i, preset.effects[i].enabled)
+  }
 }
