@@ -68,7 +68,7 @@ export const newSettings = (): Settings => ({
   presetDescription: "",
   isKnobActive: false,
   octave: 4,
-  volume: 0.2,
+  volume: 0.3,
   volumeAdsr: {
     attack: 10,
     hold: 50,
@@ -105,8 +105,8 @@ export const newSettings = (): Settings => ({
     2: {
       enabled: false,
       waveform: Wave.sine,
-      gain: 0.5,
-      pitch: -12,
+      gain: 0.2,
+      pitch: 12,
       panning: 0,
       phase: 0,
       unisonVoices: 1,
@@ -116,8 +116,8 @@ export const newSettings = (): Settings => ({
     3: {
       enabled: false,
       waveform: Wave.sine,
-      gain: 0.5,
-      pitch: 12,
+      gain: 0.2,
+      pitch: -12,
       panning: 0,
       phase: 0,
       unisonVoices: 1,
