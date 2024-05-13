@@ -61,7 +61,7 @@ export interface DelaySettings {
   node: DelayNode | null
   time: number
   feedback: number
-  volume: number
+  gain: number
 }
 
 export interface DistortionSettings {
@@ -147,7 +147,7 @@ export const defaultDelaySettings = (
   effect: "delay",
   time: 500,
   feedback: 0.5,
-  volume: 1,
+  gain: 0.5,
 })
 
 export const defaultDistortionSettings = (

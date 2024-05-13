@@ -1,7 +1,7 @@
 import { Component } from "solid-js"
 import { EffectSettings, DelaySettings } from "../../audio/effects"
 import { Knob } from "../Knob"
-import { setDelayFeedback, setDelayTime, setDelayVolume } from "../../audio/effectSettings"
+import { setDelayFeedback, setDelayTime, setDelayGain } from "../../audio/effectSettings"
 
 interface Props {
   id: number
@@ -30,12 +30,12 @@ export const DelaySection: Component<Props> = (props) => {
         onChange={(value) => setDelayFeedback(props.id, value)}
       />
       <Knob
-        value={props.effect.volume}
-        defaultValue={1}
+        value={props.effect.gain}
+        defaultValue={0.5}
         min={0}
         max={1}
-        label="Volume"
-        onChange={(value) => setDelayVolume(props.id, value)}
+        label="Gain"
+        onChange={(value) => setDelayGain(props.id, value)}
       />
     </div>
   )

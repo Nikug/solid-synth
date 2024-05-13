@@ -32,7 +32,7 @@ export default class Delay extends AudioWorkletProcessor {
         automationRate: "a-rate",
       },
       {
-        name: "volume",
+        name: "gain",
         defaultValue: 1,
         minValue: 0,
         maxValue: 1,
@@ -47,18 +47,18 @@ export default class Delay extends AudioWorkletProcessor {
     const input = inputs[0]
     const output = outputs[0]
 
-    const { time, feedback, volume } = parameters
+    const { time, feedback, gain } = parameters
 
     for (let i = 0, ilimit = output[0].length; i < ilimit; ++i) {
       const sampleTime = time.length > 1 ? time[i] : time[0]
       const sampleFeedback = feedback.length > 1 ? feedback[i] : feedback[0]
-      const sampleVolume = volume.length > 1 ? volume[i] : volume[0]
+      const sampleGain = gain.length > 1 ? gain[i] : gain[0]
 
       const input0 = input[0]?.[i] ?? 0
       const input1 = input[1]?.[i] ?? 0
 
-      output[0][i] = input0 + this.delayBuffer[0][this.delayIndex] * sampleVolume
-      output[1][i] = input1 + this.delayBuffer[1][this.delayIndex] * sampleVolume
+      output[0][i] = input0 + this.delayBuffer[0][this.delayIndex] * sampleGain
+      output[1][i] = input1 + this.delayBuffer[1][this.delayIndex] * sampleGain
 
       this.delayBuffer[0][this.delayIndex] =
         input0 + this.delayBuffer[0][this.delayIndex] * sampleFeedback
