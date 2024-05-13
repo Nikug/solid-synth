@@ -15,10 +15,10 @@ export const PresetSection: Component = () => {
 
   return (
     <div class="p-4 h-full">
-      <h3 class="mb-2 text-gray-500">
+      <h3 class="mb-2 text-gray-500 max-w-48 whitespace-nowrap overflow-hidden text-ellipsis">
         Preset: <span class="text-gray-700">{settings.presetName}</span>
       </h3>
-      <div class="flex gap-2">
+      <div class="flex gap-2 justify-end">
         <Button onClick={() => showPresetPopup()}>Save</Button>
         <Dropdown
           key={null}
