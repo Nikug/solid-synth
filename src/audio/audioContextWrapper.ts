@@ -56,7 +56,7 @@ export const effectsOutput4 = () => _effectsOutput4
 export const effectsOutput5 = () => _effectsOutput5
 export const effectsOutput6 = () => _effectsOutput6
 
-const initialize = async () => {
+export const initialize = async () => {
   setSettings("state", "initializing")
   _audioContext = new AudioContext()
   _outputGain = _audioContext.createGain()

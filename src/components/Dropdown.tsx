@@ -7,9 +7,10 @@ export interface Option<T, V> {
 }
 
 interface Props<T extends string | number, V extends JSX.Element> {
-  key: T
+  key: T | null
   options: Option<T, V>[]
   onChange: (key: T, value: V) => void
+  placeholder?: string
 }
 
 export const Dropdown = <T extends string | number, V extends JSX.Element>(props: Props<T, V>) => {
@@ -52,6 +53,7 @@ export const Dropdown = <T extends string | number, V extends JSX.Element>(props
   }
 
   const selectedValue = () => {
+    if (props.key === null) return props.placeholder
     return props.options.find((option) => option.id === props.key)?.value
   }
 

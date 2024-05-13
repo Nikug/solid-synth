@@ -1,11 +1,12 @@
 import { Component, Show, createSignal, onMount } from "solid-js"
-import { settings } from "../audio/settingsStore"
+import { DefaultPresetName, settings } from "../audio/settingsStore"
 import { hidePresetPopup } from "../presets/presetStore"
 import { Button } from "./Button"
 import { doesPresetExist, savePreset } from "../presets/presetUtils"
 
 export const PresetPopup: Component = () => {
   const [overwrite, setOverwrite] = createSignal(false)
+  const [defaultError, setDefaultError] = createSignal(false)
 
   let input: HTMLInputElement
 
@@ -18,6 +19,13 @@ export const PresetPopup: Component = () => {
   }
 
   const handleSave = () => {
+    setDefaultError(false)
+
+    if (name() === DefaultPresetName || !name()) {
+      setDefaultError(true)
+      return
+    }
+
     if (doesPresetExist(name()) && !overwrite()) {
       setOverwrite(true)
     } else {
@@ -46,6 +54,9 @@ export const PresetPopup: Component = () => {
             <p class="text-red-500">
               Preset with that name already exists. Click save to overwrite it.
             </p>
+          </Show>
+          <Show when={defaultError()}>
+            <p class="text-red-500">Cannot save with name '{name()}'.</p>
           </Show>
           <div class="flex justify-end gap-4">
             <Button onClick={() => hidePresetPopup()}>Cancel</Button>

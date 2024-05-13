@@ -15,6 +15,7 @@ import {
 } from "./effects"
 
 export const changeSmoothing = 1 / 60
+export const DefaultPresetName = "Default"
 
 export interface Settings {
   active: boolean
@@ -57,10 +58,10 @@ export interface OscillatorSettings {
   unisonWidth: number
 }
 
-const newSettings = (): Settings => ({
+export const newSettings = (): Settings => ({
   active: false,
   state: "uninitialized",
-  presetName: "Default",
+  presetName: DefaultPresetName,
   isKnobActive: false,
   volume: 0.2,
   volumeAdsr: {

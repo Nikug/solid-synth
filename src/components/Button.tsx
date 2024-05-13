@@ -8,7 +8,7 @@ interface Props {
 export const Button: Component<Props> = (props) => {
   return (
     <button
-      class="rounded bg-gray-200 hover:bg-gray-300 cursor-pointer px-2 py-0.5"
+      class="rounded bg-gray-200 hover:bg-gray-300 cursor-pointer px-4 py-0.5"
       onClick={props.onClick}
     >
       {props.children}
