@@ -12,7 +12,7 @@ export const PresetsTab: Component = () => {
     <div class="rounded-lg border p-4 mb-4">
       <h3 class="font-bold mb-2">Saved presets</h3>
       <div class="max-h-64 overflow-y-auto divide-y">
-        <For each={getPresetNames()}>
+        <For each={getPresetNames()} fallback={<p class="text-gray-500">No saved presets</p>}>
           {(preset) => (
             <div class="py-2 flex justify-between items-center">
               <div class="flex-grow">
