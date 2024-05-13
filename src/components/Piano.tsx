@@ -14,6 +14,7 @@ import { TabSection } from "./TabSection"
 import { EffectSection } from "./effects/EffectSection"
 import { PresetSection } from "./PresetSection"
 import { PresetsTab } from "./PresetsTab"
+import { AboutTab } from "./AboutTab"
 
 interface Key {
   note: Note
@@ -60,7 +61,7 @@ export const Piano: Component = () => {
         <div class="flex-grow" />
         <PresetSection />
       </div>
-      <TabSection headers={["Oscillators", "Effects", "Presets"]}>
+      <TabSection headers={["Oscillators", "Effects", "Presets", "About"]}>
         <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
           <OscillatorSection id={1} />
           <OscillatorSection id={2} />
@@ -89,6 +90,9 @@ export const Piano: Component = () => {
         </div>
         <div>
           <PresetsTab />
+        </div>
+        <div>
+          <AboutTab />
         </div>
       </TabSection>
       <div class="flex gap-4">
