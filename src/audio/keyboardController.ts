@@ -1,7 +1,7 @@
 import { Keymap, Octave } from "../constants"
 import { presetSettings } from "../presets/presetStore"
 import { audioContext } from "./audioContextWrapper"
-import { addNote, noteBuffer, removeNote, setOctave } from "./noteStore"
+import { addNote, removeNote, setOctave } from "./noteStore"
 import { settings } from "./settingsStore"
 
 export const initializeKeyboard = () => {
@@ -26,7 +26,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 
   if (Keymap[event.code]) {
-    let octave = noteBuffer.octave
+    let octave = settings.octave
     if (event.code === "KeyL") {
       octave += 1
     }
@@ -39,7 +39,7 @@ const handleKeyUp = (event: KeyboardEvent) => {
   if (presetSettings.showSavePopup) return
   if (event.repeat) return
   if (Keymap[event.code]) {
-    let octave = noteBuffer.octave
+    let octave = settings.octave
     if (event.code === "KeyL") {
       octave += 1
     }
@@ -51,9 +51,9 @@ const handleKeyUp = (event: KeyboardEvent) => {
 const handleOctaveKey = (event: KeyboardEvent) => {
   if (event.code === "ArrowUp") {
     event.preventDefault()
-    setOctave((noteBuffer.octave + 1) as Octave)
+    setOctave((settings.octave + 1) as Octave)
   } else if (event.code === "ArrowDown") {
     event.preventDefault()
-    setOctave((noteBuffer.octave - 1) as Octave)
+    setOctave((settings.octave - 1) as Octave)
   }
 }

@@ -13,6 +13,7 @@ import {
   getDefaultEffectSettings,
   setEffectState,
 } from "./effects"
+import { Octave } from "../constants"
 
 export const changeSmoothing = 1 / 60
 export const DefaultPresetName = "Default"
@@ -22,6 +23,7 @@ export interface Settings {
   state: "uninitialized" | "initializing" | "initialized"
   presetName: string
   isKnobActive: boolean
+  octave: Octave
   volume: number
   volumeAdsr: Adsr
   filterAdsr: Adsr
@@ -63,6 +65,7 @@ export const newSettings = (): Settings => ({
   state: "uninitialized",
   presetName: DefaultPresetName,
   isKnobActive: false,
+  octave: 4,
   volume: 0.2,
   volumeAdsr: {
     attack: 10,

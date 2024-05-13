@@ -1,10 +1,9 @@
 import { createStore } from "solid-js/store"
 import { playNote, stopAllNotes, stopNote } from "./audioEngine"
 import { Note, NoteFrequencies, Octave } from "../constants"
-import { settings } from "./settingsStore"
+import { setSettings, settings } from "./settingsStore"
 
 interface Notes {
-  octave: Octave
   activeNotes: Map<string, ActiveNote>
 }
 
@@ -16,7 +15,6 @@ interface ActiveNote {
 
 const newStore = (): Notes => {
   return {
-    octave: 4,
     activeNotes: new Map<string, ActiveNote>(),
   }
 }
@@ -30,8 +28,8 @@ export const createNoteName = (octave: number, note: string) => `${note}${octave
 export const setOctave = (octave: Octave) => {
   if (octave < 1 || octave > 7) return
 
-  const difference = octave - notes.octave
-  setNotes("octave", octave as Octave)
+  const difference = octave - settings.octave
+  setSettings("octave", octave as Octave)
 
   // Stop all notes, transpose them to new octave and play again
   stopAllNotes()

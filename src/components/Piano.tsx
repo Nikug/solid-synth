@@ -25,14 +25,14 @@ export const Piano: Component = () => {
     const keys = Object.entries(Keymap)
     const entries: Key[] = keys.map(([key, note], i) => ({
       note: note as Note,
-      octave: (noteBuffer.octave + Math.floor(i / 12)) as Octave,
+      octave: (settings.octave + Math.floor(i / 12)) as Octave,
       key: key[3].toLowerCase(),
     }))
     return entries
   }
 
   const handleOctaveChange = (increment: number) => {
-    const newOctave = (noteBuffer.octave + increment) as Octave
+    const newOctave = (settings.octave + increment) as Octave
     setOctave(newOctave)
   }
 
@@ -95,7 +95,7 @@ export const Piano: Component = () => {
           >
             <RiArrowsArrowUpSFill size="1.5em" />
           </button>
-          <p>{noteBuffer.octave}</p>
+          <p>{settings.octave}</p>
           <button
             class="w-8 h-8 border rounded bg-white flex items-center justify-center"
             onclick={() => handleOctaveChange(-1)}
