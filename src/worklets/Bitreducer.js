@@ -36,10 +36,8 @@ export default class Bitreducer extends AudioWorkletProcessor {
     for (let i = 0, ilimit = output[0].length; i < ilimit; ++i) {
       const sampleBits = bits.length > 1 ? bits[i] : bits[0]
 
-      if (input[0] === undefined) {
-        output[0][i] = 0
-        output[1][i] = 0
-        continue
+      if (input[0] === undefined || input[1] === undefined) {
+        break
       }
 
       output[0][i] = Math.round(input[0][i] * sampleBits) / sampleBits

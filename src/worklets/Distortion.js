@@ -47,11 +47,8 @@ export default class Distortion extends AudioWorkletProcessor {
       const linearDrive = Math.pow(10, sampleDrive / 20)
       const linearPostGain = Math.pow(10, samplePostGain / 20)
 
-      if (input[0] === undefined) {
+      if (input[0] === undefined || input[1] === undefined) {
         break
-        // output[0][i] = 0
-        // output[1][i] = 0
-        // continue
       }
 
       output[0][i] = Math.tanh(input[0][i] * linearDrive) * linearPostGain
