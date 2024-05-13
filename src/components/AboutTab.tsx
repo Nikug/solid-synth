@@ -13,6 +13,22 @@ export const AboutTab: Component = () => {
       >
         github.com/nikug/solid-synth
       </a>
+      <h3 class="font-bold mt-4">Attributions</h3>
+      <p>Reverb samples from freesound.org</p>
+      <ul class="list-disc ml-4 text-sm max-w-3xl">
+        <li>
+          (Short) IR_Abandoned Brick Building.Long Corridor 8_EM.wav by newlocknew --
+          https://freesound.org/s/704186/ -- License: Attribution NonCommercial 4.0
+        </li>
+        <li>
+          (Medium) Large Bright Plate 01 by recordinghopkins -- https://freesound.org/s/175311/ --
+          License: Attribution 4.0
+        </li>
+        <li>
+          (Long) Alesis Microverb IR Large 6 by joeribraams -- https://freesound.org/s/414178/ --
+          License: Creative Commons 0
+        </li>
+      </ul>
     </div>
   )
 }
