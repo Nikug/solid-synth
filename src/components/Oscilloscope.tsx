@@ -28,10 +28,10 @@ const OscilloscopeInner: Component = () => {
     context.strokeStyle = gray[600]
 
     const loop = (_time: number) => {
-      analyserNode().getFloatTimeDomainData(data)
-
       context.clearRect(0, 0, canvas.width, canvas.height)
       context.beginPath()
+
+      analyserNode().getFloatTimeDomainData(data)
 
       const sliceWidth = canvas.width / bufferLength
       let x = 0

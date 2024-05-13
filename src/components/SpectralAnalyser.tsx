@@ -29,10 +29,10 @@ const SpectralAnalyserInner: Component = () => {
     context.strokeStyle = gray[600]
 
     const loop = (_time: number) => {
-      analyserNode().getFloatFrequencyData(data)
-
       context.clearRect(0, 0, canvas.width, canvas.height)
       context.beginPath()
+
+      analyserNode().getFloatFrequencyData(data)
 
       for (let i = 0; i < bufferLength; i++) {
         const v = data[i]
