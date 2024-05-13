@@ -8,7 +8,7 @@ import { getPresetNames, loadPreset } from "../presets/presetUtils"
 export const PresetSection: Component = () => {
   const options = () => {
     const names = getPresetNames()
-    const options = names.map((name) => ({ id: name, value: name }))
+    const options = names.map((preset) => ({ id: preset.name, value: preset.name }))
     options.unshift({ id: DefaultPresetName, value: DefaultPresetName })
     return options
   }

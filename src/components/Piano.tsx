@@ -1,7 +1,7 @@
 import { Component, For, Show } from "solid-js"
 import { Keymap, Note, Octave } from "../constants"
 import { PianoKey } from "./PianoKey"
-import { noteBuffer, setOctave } from "../audio/noteStore"
+import { setOctave } from "../audio/noteStore"
 import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 import { Knob } from "./Knob"
 import { settings, setGlobalVolume } from "../audio/settingsStore"
@@ -13,6 +13,7 @@ import { FilterSection } from "./FilterSection"
 import { TabSection } from "./TabSection"
 import { EffectSection } from "./effects/EffectSection"
 import { PresetSection } from "./PresetSection"
+import { PresetsTab } from "./PresetsTab"
 
 interface Key {
   note: Note
@@ -59,7 +60,7 @@ export const Piano: Component = () => {
         <div class="flex-grow" />
         <PresetSection />
       </div>
-      <TabSection headers={["Oscillators", "Effects"]}>
+      <TabSection headers={["Oscillators", "Effects", "Presets"]}>
         <div class="grid grid-cols-3 grid-rows-auto gap-x-2 gap-y-4 mb-4">
           <OscillatorSection id={1} />
           <OscillatorSection id={2} />
@@ -85,6 +86,9 @@ export const Piano: Component = () => {
             <EffectSection id={5} arrow />
             <EffectSection id={6} />
           </div>
+        </div>
+        <div>
+          <PresetsTab />
         </div>
       </TabSection>
       <div class="flex gap-4">

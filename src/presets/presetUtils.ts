@@ -7,16 +7,23 @@ import {
   setSettings,
   settings,
 } from "../audio/settingsStore"
+import { produce, unwrap } from "solid-js/store"
+import { createLocalStore } from "../hooks"
+import rfdc from "rfdc"
+import { stopAllNotes } from "../audio/audioEngine"
 
+const clone = rfdc()
 const localStoragePresetKey = "presets"
 export type LocalStoragePresets = Record<string, Settings>
 
+export const [presets, setPresets] = createLocalStore<LocalStoragePresets>(
+  localStoragePresetKey,
+  {},
+)
+
 export const doesPresetExist = (name: string): boolean => {
   if (name === DefaultPresetName) return true
-
-  const presets = localStorage.getItem(localStoragePresetKey)
-  const parsed = presets ? JSON.parse(presets) : {}
-  return !!parsed[name]
+  return !!presets[name]
 }
 
 export const savePreset = (name: string) => {
@@ -25,28 +32,31 @@ export const savePreset = (name: string) => {
   }
 
   setSettings("presetName", name)
-  const presets = localStorage.getItem(localStoragePresetKey) || "{}"
-
-  const parsed = JSON.parse(presets)
-  parsed[name] = settings
-  localStorage.setItem(localStoragePresetKey, JSON.stringify(parsed))
+  setPresets(produce((state) => (state[name] = clone(unwrap(settings)))))
 }
 
 export const loadPreset = (name: string) => {
-  const presets = localStorage.getItem(localStoragePresetKey)
-
   try {
-    const preset = name === DefaultPresetName ? newSettings() : JSON.parse(presets)[name]
+    stopAllNotes()
+    const preset = name === DefaultPresetName ? newSettings() : clone(unwrap(presets[name]))
     handlePresetLoading(preset)
   } catch (e) {
     console.error("Could not load preset", e)
   }
 }
 
-export const getPresetNames = () => {
-  const presets = localStorage.getItem(localStoragePresetKey) || "{}"
-  const parsed = JSON.parse(presets)
-  return Object.keys(parsed)
+export const deletePreset = (name: string) => {
+  if (name === DefaultPresetName) {
+    return
+  }
+  setPresets(produce((presets) => delete presets[name]))
+}
+
+export const getPresetNames = (): { name: string; description: string }[] => {
+  return Object.values(presets).map((preset: Settings) => ({
+    name: preset.presetName,
+    description: preset.presetDescription,
+  }))
 }
 
 const handlePresetLoading = async (preset: Settings) => {
