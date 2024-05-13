@@ -1,5 +1,5 @@
 import { Component, Show, createSignal, onMount } from "solid-js"
-import { DefaultPresetName, settings } from "../audio/settingsStore"
+import { DefaultPresetName, setSettings, settings } from "../audio/settingsStore"
 import { hidePresetPopup } from "../presets/presetStore"
 import { Button } from "./Button"
 import { doesPresetExist, savePreset } from "../presets/presetUtils"
@@ -9,6 +9,7 @@ export const PresetPopup: Component = () => {
   const [defaultError, setDefaultError] = createSignal(false)
 
   let input: HTMLInputElement
+  let descriptionInput: HTMLTextAreaElement
 
   onMount(() => {
     input.focus()
@@ -16,6 +17,10 @@ export const PresetPopup: Component = () => {
 
   const name = () => {
     return input.value
+  }
+
+  const description = () => {
+    return descriptionInput.value
   }
 
   const handleSave = () => {
@@ -29,6 +34,7 @@ export const PresetPopup: Component = () => {
     if (doesPresetExist(name()) && !overwrite()) {
       setOverwrite(true)
     } else {
+      setSettings("presetDescription", description())
       savePreset(name())
       hidePresetPopup()
     }
@@ -38,7 +44,7 @@ export const PresetPopup: Component = () => {
     <>
       <div class="fixed bg-black/25 inset-0 z-10" onClick={() => hidePresetPopup()} />
       <div class="fixed bg-gray-100 shadow-xl w-80 min-h-48 border rounded-lg p-4 mx-auto inset-x-0 top-96 z-20">
-        <div class="flex flex-col gap-2 justify-between h-full">
+        <div class="flex flex-col gap-4 justify-between h-full">
           <div class="flex flex-col gap-2">
             <h3 class="font-bold mb-2">Save Preset</h3>
             <label for="preset-name">Name</label>
@@ -48,6 +54,15 @@ export const PresetPopup: Component = () => {
               id="preset-name"
               class="px-1 rounded border focus:border-blue-600 focus:outline-none focus:ring-0"
               value={settings.presetName}
+            />
+            <label for="preset-name" class="mt-2">
+              Description
+            </label>
+            <textarea
+              ref={descriptionInput}
+              id="preset-description"
+              class="px-1 rounded border focus:border-blue-600 focus:outline-none focus:ring-0"
+              value={settings.presetDescription}
             />
           </div>
           <Show when={overwrite()}>

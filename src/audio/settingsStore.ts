@@ -22,6 +22,7 @@ export interface Settings {
   active: boolean
   state: "uninitialized" | "initializing" | "initialized"
   presetName: string
+  presetDescription: string
   isKnobActive: boolean
   octave: Octave
   volume: number
@@ -64,6 +65,7 @@ export const newSettings = (): Settings => ({
   active: false,
   state: "uninitialized",
   presetName: DefaultPresetName,
+  presetDescription: "",
   isKnobActive: false,
   octave: 4,
   volume: 0.2,
