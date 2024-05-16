@@ -37,7 +37,7 @@ export const FilterSection: Component = () => {
           </For>
         </div>
       </div>
-      <div class="flex gap-2 mb-1">
+      <div class="flex gap-2 mb-4">
         <Knob
           label="Cutoff"
           exponential
@@ -58,7 +58,7 @@ export const FilterSection: Component = () => {
           onChange={(value) => setSettings("filter", "resonance", value)}
         />
         <Knob
-          label="Amount"
+          label="Adsr Amount"
           value={settings.filter.amount}
           min={0}
           max={1}

@@ -5,7 +5,7 @@ import shortImpulse from "../assets/impulses/short.wav"
 import { audioContext } from "./audioContextWrapper"
 import { ReverbSettings } from "./effects"
 
-export const setReverbImpulse = async (id: number, impulse: string) => {
+ export const setReverbImpulse = async (id: number, impulse: string) => {
   // @ts-expect-error
   setSettings("effects", id, "impulse", impulse)
   const node = settings.effects[id].node as ConvolverNode
