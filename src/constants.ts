@@ -152,6 +152,8 @@ export const Keymap: Record<string, Note> = {
 }
 
 export const MidiMessage = {
-  NoteOn: 144,
-  NoteOff: 128,
+  NoteOnChannel0: 144,
+  NoteOnChannel16: 159,
+  NoteOffChannel0: 128,
+  NoteOffChannel16: 143,
 }

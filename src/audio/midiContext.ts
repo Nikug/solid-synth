@@ -27,11 +27,15 @@ const onMidiMessage = (event: MIDIMessageEvent) => {
 
   const [command, note, velocity] = event.data
 
-  if (command === MidiMessage.NoteOn) {
+  if (command >= MidiMessage.NoteOnChannel0 && command <= MidiMessage.NoteOnChannel16) {
     const noteVelocity = settings.midiVelocity ? midiToGain(velocity) : 1
     const { key, octave } = midiToKeyAndOctave(note)
-    addNote(key, octave, noteVelocity)
-  } else if (command === MidiMessage.NoteOff) {
+    if (noteVelocity > 0) {
+      addNote(key, octave, noteVelocity)
+    } else {
+      removeNote(key, octave)
+    }
+  } else if (command >= MidiMessage.NoteOffChannel0 && command <= MidiMessage.NoteOffChannel16) {
     const { key, octave } = midiToKeyAndOctave(note)
     removeNote(key, octave)
   }
