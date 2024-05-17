@@ -9,6 +9,7 @@ Deployed at: [https://nikug.github.io/solid-synth/](https://nikug.github.io/soli
 - 3 Oscillators with multiple different wave forms
 - Volume and filter envelopes
 - Multiple effects
+- Support for MIDI controllers as input
 
 ## Running locally
 
