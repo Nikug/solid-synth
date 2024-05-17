@@ -28,26 +28,14 @@ export const createNoteName = (octave: number, note: string) => `${note}${octave
 export const setOctave = (octave: Octave) => {
   if (octave < 1 || octave > 7) return
 
-  const difference = octave - settings.octave
   setSettings("octave", octave as Octave)
 
-  // Stop all notes, transpose them to new octave and play again
   stopAllNotes()
-  setNotes("activeNotes", (activeNotes) => {
-    const newActiveNotes = new Map<string, ActiveNote>()
-    activeNotes.forEach((value) => {
-      const newNote = {
-        octave: (value.octave + difference) as Octave,
-        note: value.note,
-        frequency: NoteFrequencies[value.octave + difference][value.note],
-      }
-      newActiveNotes.set(createNoteName(newNote.octave, newNote.note), newNote)
-    })
-    return newActiveNotes
-  })
+  setNotes("activeNotes", new Map())
 }
 
-export const addNote = (note: Note, octave: Octave) => {
+export const addNote = (note: Note, octave: Octave, gain: number = 1) => {
+  if (octave < 1 || octave > 7) return
   const key = createNoteName(octave, note)
   if (notes.activeNotes.has(key)) return
 
@@ -62,7 +50,7 @@ export const addNote = (note: Note, octave: Octave) => {
     return new Map(activeNotes)
   })
 
-  playNote(activeNote.frequency, 1, settings)
+  playNote(activeNote.frequency, gain, settings)
 }
 
 export const removeNote = (note: Note, octave: Octave) => {

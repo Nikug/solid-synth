@@ -1,26 +1,24 @@
 import { createStore } from "solid-js/store"
 import { settings } from "./settingsStore"
-import { playNote, stopNote } from "./audioEngine"
 import { MidiMessage } from "../constants"
-import { midiToFrequency, midiToGain } from "./midiUtils"
+import { midiToGain, midiToKeyAndOctave } from "./midiUtils"
+import { addNote, removeNote } from "./noteStore"
 
 interface MidiContext {
-  midiAccess: boolean
   midi: MIDIAccess | null
 }
 
 export const [midiContext, setMidiContext] = createStore<MidiContext>({
-  midiAccess: false,
   midi: null,
 })
 
 export const createMidiContext = async () => {
   try {
     const midi = await navigator.requestMIDIAccess()
-    setMidiContext({ midiAccess: true, midi })
+    setMidiContext({ midi })
     setupMidiMessageHandler()
   } catch (e) {
-    setMidiContext("midiAccess", false)
+    console.log("MIDI access not available")
   }
 }
 
@@ -31,19 +29,21 @@ const onMidiMessage = (event: MIDIMessageEvent) => {
 
   if (command === MidiMessage.NoteOn) {
     const noteVelocity = settings.midiVelocity ? midiToGain(velocity) : 1
-    playNote(midiToFrequency(note), noteVelocity, settings)
+    const { key, octave } = midiToKeyAndOctave(note)
+    addNote(key, octave, noteVelocity)
   } else if (command === MidiMessage.NoteOff) {
-    stopNote(midiToFrequency(note))
+    const { key, octave } = midiToKeyAndOctave(note)
+    removeNote(key, octave)
   }
 }
 
 const setupMidiMessageHandler = () => {
-  if (!midiContext.midi || !midiContext.midiAccess) return
+  if (!midiContext.midi) return
 
   midiContext.midi.inputs.forEach((input) => (input.onmidimessage = onMidiMessage))
 }
 
 export const cleanupMidiMessageHandler = () => {
-  if (!midiContext.midi || !midiContext.midiAccess) return
+  if (!midiContext.midi) return
   midiContext.midi.inputs.forEach((input) => (input.onmidimessage = null))
 }
