@@ -4,6 +4,7 @@ import {
   DefaultPresetName,
   Settings,
   newSettings,
+  setGlobalVolume,
   setSettings,
   settings,
 } from "../audio/settingsStore"
@@ -72,6 +73,7 @@ const handlePresetLoading = async (preset: Settings) => {
   preset.state = "initialized"
   preset.isKnobActive = false
   setSettings(preset)
+  setGlobalVolume(preset.volume)
 
   for (let i = 1; i <= 6; i++) {
     setEffectState(i, preset.effects[i].enabled)

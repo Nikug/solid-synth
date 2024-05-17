@@ -9,6 +9,7 @@ import {
   setCompressorRelease,
   setCompressorThreshold,
   setDelayFeedback,
+  setDelayGain,
   setDelayTime,
   setDistortionDrive,
   setDistortionPostGain,
@@ -292,6 +293,7 @@ export const setEffectState = (id: number, enabled: boolean) => {
         setSettings("effects", id, "node", delay)
         setDelayTime(id, effect.time)
         setDelayFeedback(id, effect.feedback)
+        setDelayGain(id, effect.gain)
         createConnections(id, [delay], [delay])
         break
       default:
