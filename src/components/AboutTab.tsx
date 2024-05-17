@@ -1,10 +1,18 @@
-import { Component } from "solid-js"
+import { Component, For } from "solid-js"
+import { MonoText } from "./MonoText"
 
 export const AboutTab: Component = () => {
   return (
     <div class="p-4 mb-8">
       <h3 class="font-bold">Solid Synth</h3>
       <p>A subtractive synthesizer built with SolidJS and Web Audio API.</p>
+      <h3 class="font-bold mt-4">Keys</h3>
+      <p>
+        Use <For each={"sdfgyjkl".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for white
+        keys
+        <For each={"eryui".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for black keys.
+        Change octave with <MonoText>up</MonoText> and <MonoText>down</MonoText> keys.
+      </p>
       <h3 class="font-bold mt-4">Code</h3>
       <a
         class="text-blue-500 hover:underline cursor-pointer"
