@@ -12,6 +12,7 @@ export const AboutTab: Component = () => {
         keys, <For each={"eryui".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for black
         keys. Change octave with <MonoText>up</MonoText> and <MonoText>down</MonoText> keys.
       </p>
+      <p>Change knob values by dragging vertically with a mouse.</p>
       <h3 class="font-bold mt-4">Code</h3>
       <a
         class="text-blue-500 hover:underline cursor-pointer"
