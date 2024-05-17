@@ -9,9 +9,8 @@ export const AboutTab: Component = () => {
       <h3 class="font-bold mt-4">Keys</h3>
       <p>
         Use <For each={"sdfgyjkl".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for white
-        keys
-        <For each={"eryui".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for black keys.
-        Change octave with <MonoText>up</MonoText> and <MonoText>down</MonoText> keys.
+        keys, <For each={"eryui".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for black
+        keys. Change octave with <MonoText>up</MonoText> and <MonoText>down</MonoText> keys.
       </p>
       <h3 class="font-bold mt-4">Code</h3>
       <a
