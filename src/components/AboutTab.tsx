@@ -6,6 +6,7 @@ export const AboutTab: Component = () => {
     <div class="p-4 mb-8">
       <h3 class="font-bold">Solid Synth</h3>
       <p>A subtractive synthesizer built with SolidJS and Web Audio API.</p>
+      <p>Supports MIDI input.</p>
       <h3 class="font-bold mt-4">Keys</h3>
       <p>
         Use <For each={"sdfgyjkl".split("")}>{(key) => <MonoText>{key}</MonoText>}</For> for white
