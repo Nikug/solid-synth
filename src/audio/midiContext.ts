@@ -2,7 +2,7 @@ import { createStore } from "solid-js/store"
 import { settings } from "./settingsStore"
 import { playNote, stopNote } from "./audioEngine"
 import { MidiMessage } from "../constants"
-import { midiToFrequency } from "./midiUtils"
+import { midiToFrequency, midiToGain } from "./midiUtils"
 
 interface MidiContext {
   midiAccess: boolean
@@ -27,10 +27,11 @@ export const createMidiContext = async () => {
 const onMidiMessage = (event: MIDIMessageEvent) => {
   if (!settings.active) return
 
-  const [command, note, _velocity] = event.data
+  const [command, note, velocity] = event.data
 
   if (command === MidiMessage.NoteOn) {
-    playNote(midiToFrequency(note), settings)
+    const noteVelocity = settings.midiVelocity ? midiToGain(velocity) : 1
+    playNote(midiToFrequency(note), noteVelocity, settings)
   } else if (command === MidiMessage.NoteOff) {
     stopNote(midiToFrequency(note))
   }

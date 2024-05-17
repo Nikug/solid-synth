@@ -4,7 +4,7 @@ import { PianoKey } from "./PianoKey"
 import { setOctave } from "../audio/noteStore"
 import { RiArrowsArrowDownSFill, RiArrowsArrowUpSFill } from "solid-icons/ri"
 import { Knob } from "./Knob"
-import { settings, setGlobalVolume } from "../audio/settingsStore"
+import { settings, setGlobalVolume, setSettings } from "../audio/settingsStore"
 import { AdsrSection } from "./AdsrSection"
 import { OscillatorSection } from "./OscillatorSection"
 import { Oscilloscope } from "./Oscilloscope"
@@ -15,6 +15,7 @@ import { EffectSection } from "./effects/EffectSection"
 import { PresetSection } from "./PresetSection"
 import { PresetsTab } from "./PresetsTab"
 import { AboutTab } from "./AboutTab"
+import { ToggleButton } from "./ToggleButton"
 
 interface Key {
   note: Note
@@ -58,6 +59,12 @@ export const Piano: Component = () => {
           onChange={(value) => setGlobalVolume(value)}
           label="Main volume"
         />
+        <ToggleButton
+          selected={settings.midiVelocity}
+          onChange={(value) => setSettings("midiVelocity", value)}
+        >
+          MIDI Velocity
+        </ToggleButton>
         <div class="flex-grow" />
         <PresetSection />
       </div>

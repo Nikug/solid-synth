@@ -17,14 +17,14 @@ interface Oscillator {
   filterAdsr: Adsr
 }
 
-export const playNote = (frequency: number, settings: Settings) => {
+export const playNote = (frequency: number, gain: number, settings: Settings) => {
   if (oscillators[frequency]) return
 
   const newOscillators: Oscillator[] = []
   for (const [_key, oscillatorSettings] of Object.entries(settings.oscillators)) {
     if (!oscillatorSettings.enabled) continue
 
-    const oscillator = createOscillator(oscillatorSettings, settings, frequency)
+    const oscillator = createOscillator(oscillatorSettings, settings, frequency, gain)
     oscillator.oscillators.forEach((osc) => {
       osc.port.postMessage({ id: Message.waveCache, cache: waveCache() })
       osc.port.postMessage({ id: Message.start })
@@ -58,9 +58,10 @@ const createOscillator = (
   oscillatorSettings: OscillatorSettings,
   settings: Settings,
   frequency: number,
+  gain: number,
 ): Oscillator => {
   const audioGain = audioContext().createGain()
-  audioGain.gain.setValueAtTime(oscillatorSettings.gain, audioContext().currentTime)
+  audioGain.gain.setValueAtTime(oscillatorSettings.gain * gain, audioContext().currentTime)
 
   const panning = audioContext().createStereoPanner()
   panning.pan.value = oscillatorSettings.panning

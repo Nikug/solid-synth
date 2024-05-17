@@ -24,6 +24,7 @@ export interface Settings {
   presetName: string
   presetDescription: string
   isKnobActive: boolean
+  midiVelocity: boolean
   octave: Octave
   volume: number
   volumeAdsr: Adsr
@@ -67,6 +68,7 @@ export const newSettings = (): Settings => ({
   presetName: DefaultPresetName,
   presetDescription: "",
   isKnobActive: false,
+  midiVelocity: true,
   octave: 4,
   volume: 0.3,
   volumeAdsr: {
