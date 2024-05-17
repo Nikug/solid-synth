@@ -3,6 +3,7 @@ import { Piano } from "./components/Piano"
 import { initializeKeyboard, teardownKeyboard } from "./audio/keyboardController"
 import { PresetPopup } from "./components/PresetPopup"
 import { presetSettings } from "./presets/presetStore"
+import { cleanupMidiMessageHandler } from "./audio/midiContext"
 
 const App: Component = () => {
   onMount(() => {
@@ -11,6 +12,7 @@ const App: Component = () => {
 
   onCleanup(() => {
     teardownKeyboard()
+    cleanupMidiMessageHandler()
   })
 
   return (

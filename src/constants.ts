@@ -150,3 +150,8 @@ export const Keymap: Record<string, Note> = {
   KeyK: "B",
   KeyL: "C",
 }
+
+export const MidiMessage = {
+  NoteOn: 144,
+  NoteOff: 128,
+}

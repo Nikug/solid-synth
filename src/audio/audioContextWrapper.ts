@@ -6,6 +6,7 @@ import Bitcrusher from "../worklets/Bitcrusher.js?worker&url"
 import Bitreducer from "../worklets/Bitreducer.js?worker&url"
 import Distortion from "../worklets/Distortion.js?worker&url"
 import Delay from "../worklets/Delay.js?worker&url"
+import { createMidiContext } from "./midiContext"
 
 let _audioContext: AudioContext = null
 let _effectsInput: GainNode = null
@@ -94,6 +95,7 @@ export const initialize = async () => {
   _analyserNode.connect(_audioContext.destination)
   await registerWorklets()
   _waveCache = initializeWaves()
+  createMidiContext()
   setSettings("active", true)
   setSettings("state", "initialized")
 }
